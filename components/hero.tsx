@@ -45,21 +45,31 @@ export function Hero() {
         </div>
         <div className="relative z-10 flex w-full flex-col justify-center bg-[#eef7ff] px-5 pb-8 pt-4 sm:px-8 lg:w-[58%] lg:bg-transparent lg:py-8 lg:pl-10 lg:pr-0 xl:pl-12">
           <p className="mb-3 text-[9px] font-bold uppercase tracking-[0.25em] text-[#365577] sm:mb-4 sm:text-[11px] lg:mb-5 lg:text-xs xl:mb-6 xl:text-[13px]">
-            <span className="lg:hidden">Pour une vie plus saine et plus heureuse</span>
-            <span className="hidden lg:inline">Pour leur bonheur au quotidien</span>
+            <span className="lg:hidden">
+              Pour une vie plus saine et plus heureuse
+            </span>
+            <span className="hidden lg:inline">
+              Pour leur bonheur au quotidien
+            </span>
           </p>
           <h1 className="max-w-[540px] text-[clamp(28px,8.1vw,34px)] font-extrabold leading-[1.01] tracking-[-0.04em] text-[#10284b] sm:text-[38px] lg:max-w-[620px] lg:text-[48px] xl:max-w-[700px] xl:text-[56px] 2xl:text-[60px]">
             <span className="lg:hidden">
-              Tout ce dont ils ont<br />besoin pour chaque<br /><span className="text-blue-600">journée extraordinaire</span>
+              Tout ce dont ils ont
+              <br />
+              besoin pour chaque
+              <br />
+              <span className="text-blue-600">journée extraordinaire</span>
             </span>
             <span className="hidden lg:inline">
               Tout ce qu’il leur faut
-              <br /> pour <span className="text-blue-600">des jours heureux</span>
+              <br /> pour{" "}
+              <span className="text-blue-600">des jours heureux</span>
             </span>
           </h1>
           <p className="mt-3 max-w-[440px] text-[15px] leading-[1.55] text-[#294360] sm:mt-4 sm:text-base sm:leading-6 lg:mt-5 lg:max-w-[500px] lg:text-lg lg:leading-7 xl:mt-6 xl:max-w-[540px] xl:text-xl xl:leading-8">
             <span className="lg:hidden">
-              Une sélection de confiance de nourriture, jouets, hygiène et soins pour les animaux qui rendent notre vie plus belle.
+              Une sélection de confiance de nourriture, jouets, hygiène et soins
+              pour les animaux qui rendent notre vie plus belle.
             </span>
             <span className="hidden lg:inline">
               Alimentation, jouets, hygiène et soins de confiance pour ceux qui

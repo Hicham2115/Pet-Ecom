@@ -1,18 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronDown, Menu } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 
 const links = [
   ["Par animal", "#shop-by-category"],
@@ -30,7 +33,7 @@ export function Navbar() {
   return (
     <nav
       aria-label="Navigation principale"
-      className="border-t border-[#e5eef8] bg-[#f4f9fd]"
+      className="border-t border-blue-700 bg-blue-600"
     >
       <div className="flex min-h-9 w-full items-center px-0 sm:px-0 md:px-4 lg:px-8 xl:px-12">
         <NavigationMenu
@@ -39,22 +42,26 @@ export function Navbar() {
         >
           <NavigationMenuList className="w-full justify-between gap-0">
             {links.map(([label, href]) => (
-              <NavigationMenuItem key={label}>
+              <NavigationMenuItem
+                className="flex flex-1 items-center justify-center px-0.5 after:absolute after:right-0 after:top-1/2 after:h-4 after:w-px after:-translate-y-1/2 after:bg-white/35 last:after:hidden lg:px-2"
+                key={label}
+              >
                 <NavigationMenuLink asChild>
                   <Link
-                    className={`whitespace-nowrap px-1 py-1.5 text-[10px] font-semibold transition-colors hover:text-blue-700 lg:px-1.5 lg:text-xs xl:px-2 ${label === "Promotions" ? "text-red-600" : "text-[#10284b]"} gap-0.5`}
+                    className={`min-h-9 w-full whitespace-nowrap rounded-md px-0.5 py-1.5 text-[9px] font-semibold text-white transition-colors hover:bg-blue-700 hover:text-white focus-visible:bg-blue-700 focus-visible:text-white lg:px-1.5 lg:text-xs xl:px-2 ${label === "Promotions" ? "decoration-red-300 underline decoration-2 underline-offset-4" : ""} justify-center gap-0.5`}
                     href={href}
                     style={{
                       display: "inline-flex",
                       flexDirection: "row",
                       alignItems: "center",
+                      justifyContent: "center",
                     }}
                   >
                     {label}
                     {label !== "Promotions" && (
                       <ChevronDown
                         aria-hidden="true"
-                        className="size-2.5 shrink-0 lg:size-3"
+                        className="size-2.5 shrink-0 text-white lg:size-3"
                       />
                     )}
                   </Link>
@@ -63,35 +70,69 @@ export function Navbar() {
             ))}
           </NavigationMenuList>
         </NavigationMenu>
-        <Popover>
-          <PopoverTrigger
+        <Sheet>
+          <SheetTrigger
             aria-label="Ouvrir le menu de navigation"
-            className="inline-flex min-h-12 w-full items-center gap-3 px-4 text-[15px] font-semibold text-[#183657] transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 md:hidden"
+            className="inline-flex min-h-12 w-full items-center gap-3 px-4 text-[15px] font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:hidden"
+            type="button"
           >
-            <Menu aria-hidden="true" className="size-5 text-blue-600" />
+            <Menu
+              aria-hidden="true"
+              className="size-5 text-white"
+            />
             <span>Explorer les catégories</span>
             <ChevronDown
               aria-hidden="true"
-              className="ml-auto size-4 text-[#55708f]"
+              className="ml-auto size-4 text-blue-100"
             />
-          </PopoverTrigger>
-          <PopoverContent
-            align="start"
-            className="w-[calc(100vw-2rem)] max-w-sm rounded-xl border border-[#e2ebf6] p-2 shadow-[0_12px_30px_rgba(16,40,75,0.14)] md:hidden"
+          </SheetTrigger>
+          <SheetContent
+            className="h-dvh w-[min(86vw,360px)] gap-0 border-r border-[#e2ebf6] bg-white p-0 text-[#10284b] shadow-[12px_0_36px_rgba(16,40,75,0.16)]"
+            side="left"
+            showCloseButton={false}
           >
-            <div className="flex flex-col">
+            <SheetHeader className="flex-row items-center justify-between border-b border-[#e8eff7] px-5 py-5">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-600">
+                  PawWell
+                </p>
+                <SheetTitle className="mt-1 text-lg font-bold text-[#10284b]">
+                  Explorer les catégories
+                </SheetTitle>
+              </div>
+              <SheetClose
+                render={
+                  <button
+                    aria-label="Fermer le menu"
+                    className="inline-flex size-10 items-center justify-center rounded-full text-[#49627d] transition-colors hover:bg-blue-50 hover:text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                    type="button"
+                  />
+                }
+              >
+                <X aria-hidden="true" className="size-5" />
+              </SheetClose>
+            </SheetHeader>
+            <nav aria-label="Catégories" className="overflow-y-auto p-3">
               {links.map(([label, href]) => (
-                <Link
-                  className={`rounded-lg px-3 py-3 text-sm font-medium transition-colors hover:bg-blue-50 ${label === "Promotions" ? "text-red-600" : "text-[#10284b]"}`}
-                  href={href}
+                <SheetClose
                   key={label}
+                  render={
+                    <Link
+                      className={`flex min-h-12 items-center justify-between rounded-xl px-3 text-[15px] font-medium transition-colors hover:bg-blue-600 hover:text-white focus-visible:bg-blue-600 focus-visible:text-white active:bg-blue-700 active:text-white ${label === "Promotions" ? "text-red-600" : "text-[#10284b]"}`}
+                      href={href}
+                    />
+                  }
                 >
                   {label}
-                </Link>
+                  <ChevronDown
+                    aria-hidden="true"
+                    className="-rotate-90 size-4 text-[#8aa0b9]"
+                  />
+                </SheetClose>
               ))}
-            </div>
-          </PopoverContent>
-        </Popover>
+            </nav>
+          </SheetContent>
+        </Sheet>
       </div>
     </nav>
   );

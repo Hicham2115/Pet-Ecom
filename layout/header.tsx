@@ -8,7 +8,7 @@ function SearchBox() {
   return (
     <form
       action="/"
-      className="flex h-11 w-full items-center rounded-full border border-[#d9e5f3] bg-[#f8fbff] p-1 shadow-[0_2px_10px_rgba(16,40,75,0.04)] transition-colors hover:border-blue-300 focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-100 lg:h-12"
+      className="flex h-11 w-full items-center rounded-full border border-[#9fb5d0] bg-[#f8fbff] p-1 shadow-[0_2px_10px_rgba(16,40,75,0.04)] transition-colors hover:border-blue-400 focus-within:border-blue-600 focus-within:ring-4 focus-within:ring-blue-100 lg:h-12"
       role="search"
     >
       <label className="sr-only" htmlFor={id}>
