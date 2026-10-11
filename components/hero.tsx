@@ -32,27 +32,49 @@ export function Hero() {
       </div>
       <div className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(to_right,#eef7ff_0%,#eef7ff_23%,rgba(238,247,255,0.94)_37%,rgba(238,247,255,0.36)_55%,transparent_72%)] lg:block" />
       <div className="relative mx-auto flex max-w-[1440px] flex-col lg:min-h-[550px] lg:flex-row lg:items-center xl:min-h-[620px]">
-        <div className="relative z-10 flex w-full flex-col justify-center px-5 py-10 sm:px-8 lg:w-[58%] lg:py-8 lg:pl-10 lg:pr-0 xl:pl-12">
-          <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.28em] text-[#365577] sm:text-[11px] lg:mb-5 lg:text-xs xl:mb-6 xl:text-[13px]">
-            Pour leur bonheur au quotidien
+        <div className="relative h-[67vw] min-h-[240px] max-h-[440px] w-full lg:hidden">
+          <Image
+            alt="Un golden retriever et un chat tigré se reposent ensemble à la maison"
+            className="object-cover object-[center_10%]"
+            fill
+            priority
+            sizes="100vw"
+            src="/pawwell-hero.png"
+          />
+          <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-b from-transparent to-[#eef7ff]" />
+        </div>
+        <div className="relative z-10 flex w-full flex-col justify-center bg-[#eef7ff] px-5 pb-8 pt-4 sm:px-8 lg:w-[58%] lg:bg-transparent lg:py-8 lg:pl-10 lg:pr-0 xl:pl-12">
+          <p className="mb-3 text-[9px] font-bold uppercase tracking-[0.25em] text-[#365577] sm:mb-4 sm:text-[11px] lg:mb-5 lg:text-xs xl:mb-6 xl:text-[13px]">
+            <span className="lg:hidden">Pour une vie plus saine et plus heureuse</span>
+            <span className="hidden lg:inline">Pour leur bonheur au quotidien</span>
           </p>
-          <h1 className="max-w-[540px] text-[34px] font-extrabold leading-[1.06] tracking-[-0.04em] text-[#10284b] sm:text-[38px] lg:max-w-[620px] lg:text-[48px] xl:max-w-[700px] xl:text-[56px] 2xl:text-[60px]">
-            Tout ce qu’il leur faut
-            <br className="hidden lg:block" /> pour{" "}
-            <span className="text-blue-600">des jours heureux</span>
+          <h1 className="max-w-[540px] text-[clamp(28px,8.1vw,34px)] font-extrabold leading-[1.01] tracking-[-0.04em] text-[#10284b] sm:text-[38px] lg:max-w-[620px] lg:text-[48px] xl:max-w-[700px] xl:text-[56px] 2xl:text-[60px]">
+            <span className="lg:hidden">
+              Tout ce dont ils ont<br />besoin pour chaque<br /><span className="text-blue-600">journée extraordinaire</span>
+            </span>
+            <span className="hidden lg:inline">
+              Tout ce qu’il leur faut
+              <br /> pour <span className="text-blue-600">des jours heureux</span>
+            </span>
           </h1>
-          <p className="mt-4 max-w-[440px] text-[15px] leading-6 text-[#294360] sm:text-base sm:leading-6 lg:mt-5 lg:max-w-[500px] lg:text-lg lg:leading-7 xl:mt-6 xl:max-w-[540px] xl:text-xl xl:leading-8">
-            Alimentation, jouets, hygiène et soins de confiance pour ceux qui
-            embellissent nos vies.
+          <p className="mt-3 max-w-[440px] text-[15px] leading-[1.55] text-[#294360] sm:mt-4 sm:text-base sm:leading-6 lg:mt-5 lg:max-w-[500px] lg:text-lg lg:leading-7 xl:mt-6 xl:max-w-[540px] xl:text-xl xl:leading-8">
+            <span className="lg:hidden">
+              Une sélection de confiance de nourriture, jouets, hygiène et soins pour les animaux qui rendent notre vie plus belle.
+            </span>
+            <span className="hidden lg:inline">
+              Alimentation, jouets, hygiène et soins de confiance pour ceux qui
+              embellissent nos vies.
+            </span>
           </p>
           <Link
-            className="mt-5 inline-flex h-10 w-fit items-center justify-center rounded-full bg-blue-600 px-7 text-sm font-bold text-white transition-colors hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 lg:mt-6 lg:h-12 lg:px-8 lg:text-base xl:mt-7 xl:h-14 xl:px-9"
+            className="mt-4 inline-flex h-11 w-full items-center justify-center rounded-full bg-blue-600 px-7 text-sm font-bold text-white transition-colors hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 sm:mt-5 sm:h-12 sm:w-fit sm:px-8 sm:text-base lg:mt-6 lg:h-12 xl:mt-7 xl:h-14 xl:px-9"
             href="#shop-by-category"
           >
-            Choisir par animal{" "}
+            <span className="lg:hidden">Découvrir par animal</span>
+            <span className="hidden lg:inline">Choisir par animal</span>
             <ArrowRight aria-hidden="true" className="ml-2 size-4" />
           </Link>
-          <ul className="mt-6 grid max-w-[500px] grid-cols-3 gap-3 sm:gap-5 lg:mt-8 lg:max-w-[600px] lg:gap-6 xl:mt-10 xl:gap-8">
+          <ul className="mt-6 hidden max-w-[500px] grid-cols-3 gap-3 lg:mt-8 lg:grid lg:max-w-[600px] lg:gap-6 xl:mt-10 xl:gap-8">
             {benefits.map(({ icon: Icon, label, detail }) => (
               <li
                 className="flex min-w-0 flex-col gap-1.5 border-r border-[#9db5ce]/60 pr-2 last:border-0 last:pr-0 sm:gap-2 sm:pr-4 lg:pr-5 xl:pr-6"
@@ -73,16 +95,6 @@ export function Hero() {
               </li>
             ))}
           </ul>
-        </div>
-        <div className="relative h-[290px] w-full lg:hidden">
-          <Image
-            alt="Un golden retriever et un chat tigré se reposent ensemble à la maison"
-            className="object-cover object-[center_10%]"
-            fill
-            priority
-            sizes="100vw"
-            src="/pawwell-hero.png"
-          />
         </div>
       </div>
     </section>
