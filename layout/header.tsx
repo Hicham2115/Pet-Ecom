@@ -35,7 +35,7 @@ function SearchBox() {
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-40 bg-white shadow-[0_2px_14px_rgba(16,40,75,0.05)]">
+    <header className="sticky top-0 z-[100] bg-white shadow-[0_2px_14px_rgba(16,40,75,0.05)]">
       <div className="mx-auto flex min-h-[60px] w-full max-w-[1600px] items-center gap-3 px-3 py-2 sm:min-h-[68px] sm:px-6 lg:gap-6 lg:px-8 lg:py-3 2xl:px-12">
         <Link
           aria-label="Accueil PawWell"

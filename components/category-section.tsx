@@ -57,7 +57,7 @@ export function CategorySection() {
                 href={href}
                 className="group block overflow-hidden rounded-2xl bg-[#eef7ff] transition-shadow hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
               >
-                <div className="relative h-32 overflow-hidden bg-[#e3f1ff] sm:h-36">
+                <div className="relative h-48 overflow-hidden bg-[#e3f1ff] sm:h-62">
                   <span
                     aria-hidden="true"
                     className="absolute inset-0 bg-no-repeat transition-transform duration-300 group-hover:scale-105"
