@@ -40,7 +40,7 @@ export function FaqSection() {
   return (
     <section
       aria-labelledby="faq-title"
-      className="bg-[#f4f9ff] px-5 py-14 sm:px-8 sm:py-16 lg:px-10 lg:py-20"
+      className=" px-5 py-14 sm:px-8 sm:py-16 lg:px-10 lg:py-20"
     >
       <div className="mx-auto max-w-[1440px]">
         <div className="mb-8 max-w-2xl sm:mb-10">
