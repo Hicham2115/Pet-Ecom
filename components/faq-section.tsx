@@ -1,7 +1,6 @@
 import {
   ArrowRight,
   Dog,
-  Droplets,
   Bone,
   Headset,
   PawPrint,

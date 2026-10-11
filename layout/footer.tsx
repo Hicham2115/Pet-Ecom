@@ -46,7 +46,7 @@ export function Footer() {
           <div>
             <Link
               aria-label="Accueil PawWell"
-              className="inline-flex items-center gap-2.5"
+              className="inline-flex items-center gap-2.5 transition-opacity duration-300 ease-in-out hover:opacity-80"
               href="/"
             >
               <PawPrint
@@ -72,7 +72,7 @@ export function Footer() {
                 {group.links.map(({ label, href }) => (
                   <li key={label}>
                     <Link
-                      className="text-sm text-white/75 transition-colors hover:text-white focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#175ffc]"
+                      className="group relative inline-flex text-sm text-white/75 transition-[color,transform] duration-500 ease-in-out hover:translate-x-0.5 hover:text-white after:absolute after:-bottom-1 after:left-0 after:h-px after:w-0 after:bg-[#175ffc] after:transition-[width] after:duration-500 after:ease-in-out hover:after:w-full focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#175ffc]"
                       href={href}
                     >
                       {label}
@@ -132,7 +132,7 @@ export function Footer() {
             {quickLinks.map(({ label, href }) => (
               <li key={label}>
                 <Link
-                  className="inline-flex min-h-9 items-center rounded-full border border-white/15 bg-white/[0.04] px-4 text-xs font-medium text-white/75 transition-colors hover:border-[#175ffc]/60 hover:bg-[#175ffc]/15 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#175ffc]"
+                  className="inline-flex min-h-9 items-center rounded-full border border-white/15 bg-white/[0.04] px-4 text-xs font-medium text-white/75 transition-[color,background-color,border-color,transform] duration-500 ease-in-out hover:-translate-y-0.5 hover:border-[#175ffc]/60 hover:bg-[#175ffc]/15 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#175ffc]"
                   href={href}
                 >
                   {label}
@@ -157,7 +157,7 @@ export function Footer() {
           href="https://www.stallionadvertising.ma/"
           target="_blank"
           rel="noopener noreferrer"
-          className="mb-20 underline decoration-transparent underline-offset-2 transition-colors duration-200 hover:text-white hover:decoration-white"
+          className="mb-20 underline decoration-transparent underline-offset-2 transition-colors duration-500 ease-in-out hover:text-white hover:decoration-white"
         >
           Stallion Advertising
         </a>
