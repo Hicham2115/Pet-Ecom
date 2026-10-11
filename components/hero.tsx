@@ -3,9 +3,17 @@ import Link from "next/link";
 import { ArrowRight, Heart, ShieldCheck, Truck } from "lucide-react";
 
 const benefits = [
-  { icon: Truck, text: "Livraison rapide et fiable" },
-  { icon: ShieldCheck, text: "Marques choisies avec soin" },
-  { icon: Heart, text: "Pour leur bonheur et leur santé" },
+  { icon: Truck, label: "Livraison", detail: "Rapide, suivie et fiable" },
+  {
+    icon: ShieldCheck,
+    label: "Sélection",
+    detail: "Des marques choisies avec soin",
+  },
+  {
+    icon: Heart,
+    label: "Bien-être",
+    detail: "Des essentiels pour leur santé",
+  },
 ];
 
 export function Hero() {
@@ -45,16 +53,23 @@ export function Hero() {
             <ArrowRight aria-hidden="true" className="ml-2 size-4" />
           </Link>
           <ul className="mt-6 grid max-w-[500px] grid-cols-3 gap-3 sm:gap-5 lg:mt-8 lg:max-w-[600px] lg:gap-6 xl:mt-10 xl:gap-8">
-            {benefits.map(({ icon: Icon, text }) => (
+            {benefits.map(({ icon: Icon, label, detail }) => (
               <li
-                className="flex items-start gap-2 text-[11px] font-medium leading-4 text-[#183657] sm:items-center sm:text-xs lg:gap-3 lg:text-sm lg:leading-5"
-                key={text}
+                className="flex min-w-0 flex-col gap-1.5 border-r border-[#9db5ce]/60 pr-2 last:border-0 last:pr-0 sm:gap-2 sm:pr-4 lg:pr-5 xl:pr-6"
+                key={label}
               >
-                <Icon
-                  aria-hidden="true"
-                  className="mt-0.5 size-5 shrink-0 text-blue-600 sm:size-[22px] lg:size-6 xl:size-7"
-                />
-                <span>{text}</span>
+                <span className="flex items-center gap-1.5 sm:gap-2">
+                  <Icon
+                    aria-hidden="true"
+                    className="size-4 shrink-0 text-blue-600 sm:size-[18px]"
+                  />
+                  <span className="text-[9px] font-bold uppercase tracking-[0.12em] text-[#183657] sm:text-[10px] lg:text-[11px]">
+                    {label}
+                  </span>
+                </span>
+                <span className="text-[10px] leading-[1.4] text-[#49627d] sm:text-[11px] lg:text-xs xl:text-[13px]">
+                  {detail}
+                </span>
               </li>
             ))}
           </ul>

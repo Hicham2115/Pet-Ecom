@@ -4,6 +4,30 @@
 
 @custom-variant dark (&:is(.dark *));
 
+* {
+  scrollbar-color: #a8c4e4 #f3f8fd;
+  scrollbar-width: thin;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #f3f8fd;
+}
+
+*::-webkit-scrollbar-thumb {
+  border: 2px solid #f3f8fd;
+  border-radius: 999px;
+  background: #a8c4e4;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #2563eb;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
