@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, PawPrint } from "lucide-react";
 
@@ -32,6 +35,12 @@ const quickLinks = [
 ];
 
 export function Footer() {
+  const [year, setYear] = useState(2026);
+
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
+
   return (
     <footer className="relative isolate overflow-hidden bg-[#0b1c35] px-4 pb-36 pt-7 text-white sm:px-6 sm:pb-44 sm:pt-10 lg:px-10">
       <div
@@ -146,7 +155,7 @@ export function Footer() {
 
         <div className="px-6 py-5 text-center sm:px-9 sm:py-6">
           <p className="text-xs text-blue-100/65">
-            © {new Date().getFullYear()} PawWell. Tous droits réservés.
+            © {year} PawWell. Tous droits réservés.
           </p>
         </div>
       </div>
