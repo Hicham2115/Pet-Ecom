@@ -74,13 +74,13 @@ export function BestSellersSection() {
         <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 lg:gap-4">
           {products.map((product) => (
             <li
-              className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-[#e5edf6] bg-white shadow-[0_2px_8px_rgba(16,40,75,0.04)] transition-shadow hover:shadow-[0_8px_24px_rgba(16,40,75,0.1)]"
+              className="group flex min-w-0 flex-col overflow-hidden rounded-2xl border border-[#e5edf6] bg-white shadow-[0_2px_8px_rgba(16,40,75,0.04)] transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:border-[#c8dcf5] hover:shadow-[0_14px_32px_rgba(16,40,75,0.12)] focus-within:border-[#c8dcf5] focus-within:shadow-[0_14px_32px_rgba(16,40,75,0.12)] motion-reduce:transition-none"
               key={product.brand}
             >
-              <div className="relative h-36 bg-white sm:h-44">
+              <div className="relative h-36 overflow-hidden bg-white sm:h-44">
                 <Image
                   alt={`${product.brand} — ${product.name}`}
-                  className="object-contain p-2"
+                  className="object-contain p-2 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04] group-focus-within:scale-[1.04] motion-reduce:transition-none"
                   fill
                   sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 20vw"
                   src={product.image}
@@ -111,7 +111,7 @@ export function BestSellersSection() {
                   )}
                 </div>
                 <button
-                  className="mt-2.5 inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-blue-600 px-2 text-xs font-bold text-white transition-colors hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 sm:text-sm"
+                  className="mt-2.5 inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-blue-600 px-2 text-xs font-bold text-white transition-[opacity,transform,background-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 sm:text-sm sm:translate-y-2 sm:opacity-0 sm:group-hover:translate-y-0 sm:group-hover:opacity-100 sm:group-focus-within:translate-y-0 sm:group-focus-within:opacity-100 motion-reduce:transition-none"
                   type="button"
                 >
                   <ShoppingCart aria-hidden="true" className="size-4" />

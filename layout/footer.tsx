@@ -42,13 +42,7 @@ export function Footer() {
   );
 
   return (
-    <footer className="relative isolate overflow-hidden bg-[#0b1c35] px-4 pb-36 pt-7 text-white sm:px-6 sm:pb-44 sm:pt-10 lg:px-10">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 select-none overflow-hidden text-center text-[clamp(5rem,17vw,15rem)] font-black leading-[0.8] tracking-[-0.09em] text-white/[0.035]"
-      >
-        PawWell
-      </div>
+    <footer className="relative isolate overflow-hidden bg-[#0b1c35] px-4 pb-8 pt-7 text-white sm:px-6 sm:pb-10 sm:pt-10 lg:px-10">
 
       <div className="relative z-10 mx-auto max-w-[1520px] rounded-[28px] border border-white/10 bg-[#122f54] shadow-[0_20px_70px_rgba(0,0,0,0.2)] sm:rounded-[36px]">
         <div className="grid gap-9 px-6 py-9 sm:grid-cols-2 sm:px-9 sm:py-11 lg:grid-cols-[1.15fr_0.8fr_0.9fr_1.35fr] lg:gap-10 lg:px-12 lg:py-14">
@@ -160,7 +154,14 @@ export function Footer() {
         </div>
       </div>
 
-      <p className="relative z-10 mx-auto mt-4 max-w-[1440px] px-6 text-center text-[12px] text-white/70 sm:px-8 lg:px-12">
+      <div className="relative z-10 mx-auto mt-5 max-w-[1440px] text-center">
+        <div
+          aria-hidden="true"
+          className="overflow-hidden text-[clamp(5rem,17vw,15rem)] font-black leading-[0.8] tracking-[-0.09em] text-white/[0.035]"
+        >
+          PawWell
+        </div>
+        <p className="px-6 pt-4 text-center text-[12px] text-white/70 sm:px-8 lg:px-12">
         Designed &amp; developed by{" "}
         <a
           href="https://www.stallionadvertising.ma/"
@@ -170,7 +171,8 @@ export function Footer() {
         >
           Stallion Advertising
         </a>
-      </p>
+        </p>
+      </div>
     </footer>
   );
 }

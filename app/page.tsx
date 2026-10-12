@@ -6,6 +6,7 @@ import { ReviewsSection } from "@/components/reviews-section";
 import { FaqSection } from "@/components/faq-section";
 import { ContactSection } from "@/components/contact-section";
 import { ScrollReveal } from "@/components/scroll-reveal";
+import { OfferCountdown } from "@/components/offer-countdown";
 
 export default function Home() {
   return (
@@ -13,6 +14,9 @@ export default function Home() {
       <Hero />
       <ScrollReveal>
         <CategorySection />
+      </ScrollReveal>
+      <ScrollReveal>
+        <OfferCountdown />
       </ScrollReveal>
       <ScrollReveal>
         <BestSellersSection />
