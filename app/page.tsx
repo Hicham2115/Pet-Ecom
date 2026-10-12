@@ -5,17 +5,30 @@ import { RepeatDeliverySection } from "@/components/repeat-delivery-section";
 import { ReviewsSection } from "@/components/reviews-section";
 import { FaqSection } from "@/components/faq-section";
 import { ContactSection } from "@/components/contact-section";
+import { ScrollReveal } from "@/components/scroll-reveal";
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-white">
       <Hero />
-      <CategorySection />
-      <BestSellersSection />
-      <RepeatDeliverySection />
-      <ReviewsSection />
-      <FaqSection />
-      <ContactSection />
+      <ScrollReveal>
+        <CategorySection />
+      </ScrollReveal>
+      <ScrollReveal>
+        <BestSellersSection />
+      </ScrollReveal>
+      <ScrollReveal>
+        <RepeatDeliverySection />
+      </ScrollReveal>
+      <ScrollReveal>
+        <ReviewsSection />
+      </ScrollReveal>
+      <ScrollReveal>
+        <FaqSection />
+      </ScrollReveal>
+      <ScrollReveal>
+        <ContactSection />
+      </ScrollReveal>
     </main>
   );
 }

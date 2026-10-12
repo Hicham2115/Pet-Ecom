@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import Link from "next/link";
 import { ArrowRight, PawPrint } from "lucide-react";
 
@@ -35,11 +35,11 @@ const quickLinks = [
 ];
 
 export function Footer() {
-  const [year, setYear] = useState(2026);
-
-  useEffect(() => {
-    setYear(new Date().getFullYear());
-  }, []);
+  const year = useSyncExternalStore(
+    () => () => {},
+    () => new Date().getFullYear(),
+    () => 2026,
+  );
 
   return (
     <footer className="relative isolate overflow-hidden bg-[#0b1c35] px-4 pb-36 pt-7 text-white sm:px-6 sm:pb-44 sm:pt-10 lg:px-10">
@@ -160,13 +160,13 @@ export function Footer() {
         </div>
       </div>
 
-      <p className="relative z-10 mx-auto max-w-[1440px] px-6 py-4 text-center text-[12px] text-white/70 sm:px-8 lg:px-12">
+      <p className="relative z-10 mx-auto mt-4 max-w-[1440px] px-6 text-center text-[12px] text-white/70 sm:px-8 lg:px-12">
         Designed &amp; developed by{" "}
         <a
           href="https://www.stallionadvertising.ma/"
           target="_blank"
           rel="noopener noreferrer"
-          className="mb-20 underline decoration-transparent underline-offset-2 transition-colors duration-500 ease-in-out hover:text-white hover:decoration-white"
+          className="underline decoration-transparent underline-offset-2 transition-colors duration-500 ease-in-out hover:text-white hover:decoration-white"
         >
           Stallion Advertising
         </a>
