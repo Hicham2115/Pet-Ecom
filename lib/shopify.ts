@@ -23,8 +23,41 @@ type ShopifyResponse = {
   data?: {
     products?: { nodes: ShopifyProduct[] };
     product?: ShopifyProduct | null;
+    cart?: ShopifyCart | null;
+    cartCreate?: ShopifyCartPayload;
+    cartLinesAdd?: ShopifyCartPayload;
+    cartLinesUpdate?: ShopifyCartPayload;
+    cartLinesRemove?: ShopifyCartPayload;
   };
   errors?: Array<{ message: string }>;
+};
+
+export type ShopifyCartLine = {
+  id: string;
+  quantity: number;
+  merchandise: {
+    id: string;
+    title: string;
+    price: { amount: string; currencyCode: string };
+    image: { url: string; altText: string | null } | null;
+    product: { title: string; handle: string };
+  };
+};
+
+export type ShopifyCart = {
+  id: string;
+  checkoutUrl: string;
+  totalQuantity: number;
+  cost: {
+    subtotalAmount: { amount: string; currencyCode: string };
+    totalAmount: { amount: string; currencyCode: string };
+  };
+  lines: { nodes: ShopifyCartLine[] };
+};
+
+type ShopifyCartPayload = {
+  cart: ShopifyCart | null;
+  userErrors: Array<{ message: string }>;
 };
 
 const productFields = `
@@ -40,7 +73,32 @@ const productFields = `
   variants(first: 1) { nodes { id availableForSale } }
 `;
 
-async function queryShopify(query: string, variables?: Record<string, string>) {
+const cartFields = `
+  id
+  checkoutUrl
+  totalQuantity
+  cost {
+    subtotalAmount { amount currencyCode }
+    totalAmount { amount currencyCode }
+  }
+  lines(first: 50) {
+    nodes {
+      id
+      quantity
+      merchandise {
+        ... on ProductVariant {
+          id
+          title
+          price { amount currencyCode }
+          image { url altText }
+          product { title handle }
+        }
+      }
+    }
+  }
+`;
+
+async function queryShopify(query: string, variables?: Record<string, unknown>) {
   const domainValue = process.env.SHOPIFY_STORE_DOMAIN;
   const token = process.env.SHOPIFY_STOREFRONT_PRIVATE_TOKEN;
   const version = process.env.SHOPIFY_STOREFRONT_API_VERSION;
@@ -119,4 +177,82 @@ export async function getShopifyProductByHandle(handle: string) {
   const query = `query PawWellProduct($handle: String!) { product(handle: $handle) { ${productFields} } }`;
   const data = await queryShopify(query, { handle });
   return data?.product ? toProduct(data.product) : undefined;
+}
+
+export async function getShopifyCart(cartId: string) {
+  const query = `query PawWellCart($cartId: ID!) { cart(id: $cartId) { ${cartFields} } }`;
+  const data = await queryShopify(query, { cartId });
+  return data?.cart ?? null;
+}
+
+function getCartFromPayload(payload: ShopifyCartPayload | undefined) {
+  if (!payload) throw new Error("Shopify did not return a cart.");
+  if (payload.userErrors.length) {
+    throw new Error(payload.userErrors.map(({ message }) => message).join("; "));
+  }
+  if (!payload.cart) throw new Error("Shopify did not return a cart.");
+  return payload.cart;
+}
+
+export async function addShopifyCartLine(
+  cartId: string | undefined,
+  variantId: string,
+  quantity: number,
+) {
+  if (!cartId) {
+    const mutation = `mutation PawWellCartCreate($lines: [CartLineInput!]) {
+      cartCreate(input: { lines: $lines }) {
+        cart { ${cartFields} }
+        userErrors { message }
+      }
+    }`;
+    const data = await queryShopify(mutation, {
+      lines: [{ merchandiseId: variantId, quantity }],
+    });
+    return getCartFromPayload(data?.cartCreate);
+  }
+
+  const mutation = `mutation PawWellCartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
+    cartLinesAdd(cartId: $cartId, lines: $lines) {
+      cart { ${cartFields} }
+      userErrors { message }
+    }
+  }`;
+  const data = await queryShopify(mutation, {
+    cartId,
+    lines: [{ merchandiseId: variantId, quantity }],
+  });
+  return getCartFromPayload(data?.cartLinesAdd);
+}
+
+export async function updateShopifyCartLine(
+  cartId: string,
+  lineId: string,
+  quantity: number,
+) {
+  if (quantity === 0) {
+    const mutation = `mutation PawWellCartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {
+      cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
+        cart { ${cartFields} }
+        userErrors { message }
+      }
+    }`;
+    const data = await queryShopify(mutation, {
+      cartId,
+      lineIds: [lineId],
+    });
+    return getCartFromPayload(data?.cartLinesRemove);
+  }
+
+  const mutation = `mutation PawWellCartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
+    cartLinesUpdate(cartId: $cartId, lines: $lines) {
+      cart { ${cartFields} }
+      userErrors { message }
+    }
+  }`;
+  const data = await queryShopify(mutation, {
+    cartId,
+    lines: [{ id: lineId, quantity }],
+  });
+  return getCartFromPayload(data?.cartLinesUpdate);
 }

@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import type { Product } from "@/lib/products";
+import { useEcommerceStore } from "@/lib/ecommerce-store";
 import {
   Check,
   ChevronRight,
@@ -26,6 +27,12 @@ const galleryImages = [
 export function SingleProductPage({ product }: { product: Product }) {
   const [activeImage, setActiveImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const isWishlisted = useEcommerceStore((state) =>
+    state.wishlist.some((item) => item.slug === product.slug),
+  );
+  const toggleWishlist = useEcommerceStore((state) => state.toggleWishlist);
+  const addToCart = useEcommerceStore((state) => state.addToCart);
+  const isCartPending = useEcommerceStore((state) => state.isCartPending);
 
   return (
     <main className="min-h-screen bg-white text-[#10284b]">
@@ -203,19 +210,22 @@ export function SingleProductPage({ product }: { product: Product }) {
               </div>
               <button
                 className="inline-flex min-h-12 flex-1 items-center justify-center gap-2.5 rounded-xl bg-[#175ffc] px-5 text-sm font-bold text-white transition-[transform,background-color] duration-300 hover:cursor-pointer hover:bg-[#0f4fdb] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#175ffc] disabled:cursor-not-allowed disabled:bg-[#a9bad0] disabled:hover:bg-[#a9bad0]"
-                disabled={product.availableForSale === false}
+                disabled={product.availableForSale === false || !product.shopifyVariantId || isCartPending}
+                onClick={() => void addToCart(product, quantity)}
                 type="button"
               >
                 <ShoppingCart aria-hidden="true" className="size-[18px]" />
-                {product.availableForSale === false ? "Indisponible" : "Ajouter au panier"}
+                {product.availableForSale === false ? "Indisponible" : isCartPending ? "Ajout…" : "Ajouter au panier"}
               </button>
             </div>
             <button
-              className="mt-3 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-[#c9dcf5] bg-white text-sm font-semibold text-[#175ffc] transition-colors hover:cursor-pointer hover:bg-[#f5f9ff] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#175ffc]"
+              aria-pressed={isWishlisted}
+              className={`mt-3 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-[#c9dcf5] bg-white text-sm font-semibold transition-colors hover:cursor-pointer hover:bg-[#f5f9ff] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#175ffc] ${isWishlisted ? "text-blue-700" : "text-[#175ffc]"}`}
+              onClick={() => toggleWishlist(product)}
               type="button"
             >
-              <Heart aria-hidden="true" className="size-[18px]" />
-              Ajouter aux favoris
+              <Heart aria-hidden="true" className={`size-[18px] ${isWishlisted ? "fill-current" : ""}`} />
+              {isWishlisted ? "Retirer des favoris" : "Ajouter aux favoris"}
             </button>
 
             <div className="mt-5 flex items-center gap-4 rounded-2xl border border-[#e0ebf7] bg-[#f3f8fd] px-4 py-4 sm:px-5">

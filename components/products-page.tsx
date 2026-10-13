@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { Product } from "@/lib/products";
+import { useEcommerceStore } from "@/lib/ecommerce-store";
 import {
   ArrowDownWideNarrow,
   ArrowRight,
@@ -48,6 +49,13 @@ function matchesCategory(product: Product, category: string) {
 }
 
 function ProductCard({ product }: { product: Product }) {
+  const isWishlisted = useEcommerceStore((state) =>
+    state.wishlist.some((item) => item.slug === product.slug),
+  );
+  const toggleWishlist = useEcommerceStore((state) => state.toggleWishlist);
+  const addToCart = useEcommerceStore((state) => state.addToCart);
+  const isCartPending = useEcommerceStore((state) => state.isCartPending);
+
   return (
     <article className="group flex min-w-0 flex-col overflow-hidden rounded-[22px] border border-[#e4edf7] bg-white transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:border-[#c8dcf5] hover:shadow-[0_18px_38px_rgba(16,40,75,0.12)] focus-within:border-[#c8dcf5] focus-within:shadow-[0_18px_38px_rgba(16,40,75,0.12)] motion-reduce:transition-none">
       <div className="relative h-[210px] overflow-hidden bg-[#ffffff] sm:h-[230px]">
@@ -57,11 +65,13 @@ function ProductCard({ product }: { product: Product }) {
           </span>
         )}
         <button
+          aria-pressed={isWishlisted}
           aria-label={`Ajouter ${product.name} aux favoris`}
-          className="absolute right-3 top-3 z-10 flex size-9 items-center justify-center rounded-full bg-white/90 text-[#365577] shadow-sm transition-colors hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+          className={`absolute right-3 top-3 z-10 flex size-9 items-center justify-center rounded-full bg-white/90 shadow-sm transition-colors hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 ${isWishlisted ? "text-blue-600" : "text-[#365577]"}`}
+          onClick={() => toggleWishlist(product)}
           type="button"
         >
-          <Heart aria-hidden="true" className="size-[17px]" />
+          <Heart aria-hidden="true" className={`size-[17px] ${isWishlisted ? "fill-current" : ""}`} />
         </button>
         <Link
           aria-label={`Voir ${product.name}`}
@@ -130,13 +140,14 @@ function ProductCard({ product }: { product: Product }) {
         </div>
         <button
           className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#175ffc] px-3 text-sm font-bold text-white transition-[transform,background-color] duration-300 hover:-translate-y-0.5 hover:bg-[#0f4fdb] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#175ffc] disabled:cursor-not-allowed disabled:bg-[#a9bad0] disabled:hover:translate-y-0"
-          disabled={product.availableForSale === false}
+          disabled={product.availableForSale === false || !product.shopifyVariantId || isCartPending}
+          onClick={() => void addToCart(product)}
           type="button"
         >
           <ShoppingCart aria-hidden="true" className="size-4" />
           {product.availableForSale === false
             ? "Indisponible"
-            : "Ajouter au panier"}
+            : isCartPending ? "Ajout…" : "Ajouter au panier"}
         </button>
       </div>
     </article>

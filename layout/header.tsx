@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { PawPrint, Search, ShoppingCart, Truck } from "lucide-react";
+import { PawPrint, Search, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/navbar";
+import { HeaderActions } from "@/components/header-actions";
 
 function SearchBox() {
   const id = "header-search";
@@ -74,25 +75,7 @@ export function Header() {
             <span className="text-xs">Votre code postal</span>
           </span>
         </div>
-        <Link
-          aria-label="Panier, 0 article"
-          className="flex shrink-0 items-center gap-2 text-[#10284b] transition-colors hover:text-blue-700 lg:ml-0"
-          href="/cart"
-        >
-          <span className="relative">
-            <ShoppingCart aria-hidden="true" className="size-6" />
-            <span
-              aria-hidden="true"
-              className="absolute -right-2 -top-2 flex size-4 items-center justify-center rounded-full bg-blue-600 text-[9px] font-bold text-white"
-            >
-              0
-            </span>
-          </span>
-          <span className="hidden flex-col leading-tight sm:flex">
-            <span className="text-[11px] font-semibold">Panier</span>
-            <span className="text-xs">0,00 DH</span>
-          </span>
-        </Link>
+        <HeaderActions />
       </div>
       <Navbar />
     </header>

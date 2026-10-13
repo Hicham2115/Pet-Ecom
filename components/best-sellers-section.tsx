@@ -57,7 +57,7 @@ export async function BestSellersSection() {
                     <PawPrint aria-hidden="true" className="size-10 text-[#b8cbe0]" />
                   )}
                 </Link>
-                <div className="flex flex-1 flex-col px-3 pb-3 pt-2.5 sm:px-3.5">
+                <div className="flex flex-1 flex-col px-3 pb-16 pt-2.5 sm:px-3.5">
                   {product.brand && <p className="text-xs font-bold text-[#10284b] sm:text-sm">{product.brand}</p>}
                   <p className="mt-0.5 text-xs leading-4 text-[#365577] sm:text-sm sm:leading-5">
                     {product.name}
@@ -69,14 +69,14 @@ export async function BestSellersSection() {
                       <span className="text-[10px] text-slate-500 sm:text-xs">{product.unitPrice}</span>
                     )}
                   </div>
-                  <Link
-                    className="mt-2.5 inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-blue-600 px-2 text-xs font-bold text-white transition-colors hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 sm:text-sm"
+                </div>
+                <Link
+                    className="absolute inset-x-3 bottom-3 inline-flex min-h-10 translate-y-[calc(100%+0.75rem)] items-center justify-center gap-2 rounded-xl bg-blue-600 px-2 text-xs font-bold text-white opacity-0 transition-[transform,opacity,background-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100 max-sm:translate-y-0 max-sm:opacity-100 motion-reduce:translate-y-0 motion-reduce:opacity-100 sm:text-sm"
                     href={`/products/${product.slug}`}
                   >
                     <ShoppingCart aria-hidden="true" className="size-4" />
                     Voir le produit
-                  </Link>
-                </div>
+                </Link>
               </li>
             ))}
           </ul>
