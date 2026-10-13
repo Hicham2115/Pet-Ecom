@@ -114,7 +114,7 @@ export function FaqSection() {
 
             <a
               className="relative mt-6 inline-flex min-h-11 w-fit items-center gap-3 rounded-full border border-white/30 bg-white/10 py-2 pl-5 pr-2 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-              href="#shop-by-category"
+              href="/products"
             >
               Explorer les catégories
               <span className="flex size-8 items-center justify-center rounded-full bg-white text-blue-700">

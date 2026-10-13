@@ -5,31 +5,31 @@ const categories = [
   {
     label: "Chien",
     description: "Alimentation, jouets, soins et plus",
-    href: "#dog",
+    href: "/products",
     crop: "18%",
   },
   {
     label: "Chat",
     description: "Alimentation, jouets, soins et plus",
-    href: "#cat",
+    href: "/products",
     crop: "24%",
   },
   {
     label: "Alimentation",
     description: "Bien manger pour être en pleine forme",
-    href: "#food",
+    href: "/products",
     crop: "38%",
   },
   {
     label: "Jouets",
     description: "De quoi jouer et s'amuser chaque jour",
-    href: "#toys",
+    href: "/products",
     crop: "42%",
   },
   {
     label: "Hygiène & soins",
     description: "Les essentiels pour leur bien-être",
-    href: "#hygiene-care",
+    href: "/products",
     crop: "20%",
   },
 ];

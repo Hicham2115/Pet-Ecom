@@ -30,7 +30,7 @@ export function RepeatDeliverySection() {
             </p>
             <Link
               className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-blue-600 px-6 text-sm font-bold text-white shadow-[0_5px_14px_rgba(37,99,235,0.18)] transition-colors hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 sm:px-8"
-              href="#best-sellers"
+              href="/products"
             >
               Choisir mes produits
               <ArrowRight aria-hidden="true" className="size-4" />
@@ -40,11 +40,11 @@ export function RepeatDeliverySection() {
 
         <div className="relative h-[210px] w-full sm:h-[260px] lg:absolute lg:inset-y-0 lg:right-0 lg:h-full lg:w-[52%]">
           <Image
-            alt="Une boîte de produits pour animaux prête à être livrée à domicile"
-            className="object-cover object-[70%_center] lg:object-[72%_center]"
+            alt="Un chien et un chat découvrent leur colis de produits pour animaux"
+            className="object-cover object-[right_48%]"
             fill
             sizes="(max-width: 1024px) 100vw, 52vw"
-            src="/repeat-delivery.webp"
+            src="/repeat-delivery-v2.png"
           />
           <div
             aria-hidden="true"

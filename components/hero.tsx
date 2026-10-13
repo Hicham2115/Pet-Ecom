@@ -9,11 +9,6 @@ const benefits = [
     label: "Sélection",
     detail: "Des marques choisies avec soin",
   },
-  {
-    icon: Heart,
-    label: "Bien-être",
-    detail: "Des essentiels pour leur santé",
-  },
 ];
 
 export function Hero() {
@@ -31,7 +26,7 @@ export function Hero() {
         />
       </div>
       <div className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(to_right,#eef7ff_0%,#eef7ff_23%,rgba(238,247,255,0.94)_37%,rgba(238,247,255,0.36)_55%,transparent_72%)] lg:block" />
-      <div className="relative mx-auto flex max-w-[1440px] flex-col lg:min-h-[550px] lg:flex-row lg:items-center xl:min-h-[620px]">
+      <div className="relative mx-auto flex max-w-[1440px] flex-col lg:min-h-[550px] lg:flex-row lg:items-center xl:min-h-[530px]">
         <div className="relative h-[67vw] min-h-[240px] max-h-[440px] w-full lg:hidden">
           <Image
             alt="Un golden retriever et un chat tigré se reposent ensemble à la maison"
@@ -78,33 +73,32 @@ export function Hero() {
           </p>
           <Link
             className="mt-4 inline-flex h-11 w-full items-center justify-center rounded-full bg-blue-600 px-7 text-sm font-bold text-white transition-colors hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 sm:mt-5 sm:h-12 sm:w-fit sm:px-8 sm:text-base lg:mt-6 lg:h-12 xl:mt-7 xl:h-14 xl:px-9"
-            href="#shop-by-category"
+            href="/products"
           >
             <span className="lg:hidden">Découvrir par animal</span>
             <span className="hidden lg:inline">Choisir par animal</span>
             <ArrowRight aria-hidden="true" className="ml-2 size-4" />
           </Link>
-          <ul className="mt-6 hidden max-w-[500px] grid-cols-3 gap-3 lg:mt-8 lg:grid lg:max-w-[600px] lg:gap-6 xl:mt-10 xl:gap-8">
+          {/* <ul className="mt-7 hidden max-w-[600px] grid-cols-2 gap-3 lg:mt-8 lg:grid xl:mt-10 xl:gap-4">
             {benefits.map(({ icon: Icon, label, detail }) => (
               <li
-                className="flex min-w-0 flex-col gap-1.5 border-r border-[#9db5ce]/60 pr-2 last:border-0 last:pr-0 sm:gap-2 sm:pr-4 lg:pr-5 xl:pr-6"
+                className="group flex min-w-0 items-center gap-3 rounded-2xl border border-white/75 bg-white/55 px-4 py-3.5 shadow-[0_8px_24px_rgba(16,40,75,0.04)] backdrop-blur-sm transition-[background-color,border-color,transform,box-shadow] duration-300 hover:-translate-y-0.5 hover:border-white hover:bg-white/85 hover:shadow-[0_12px_28px_rgba(16,40,75,0.08)]"
                 key={label}
               >
-                <span className="flex items-center gap-1.5 sm:gap-2">
-                  <Icon
-                    aria-hidden="true"
-                    className="size-4 shrink-0 text-blue-600 sm:size-[18px]"
-                  />
-                  <span className="text-[9px] font-bold uppercase tracking-[0.12em] text-[#183657] sm:text-[10px] lg:text-[11px]">
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-[14px] bg-white text-blue-600 shadow-[0_3px_10px_rgba(16,40,75,0.07)] transition-colors group-hover:bg-[#175ffc] group-hover:text-white">
+                  <Icon aria-hidden="true" className="size-5" />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-[10px] font-bold uppercase tracking-[0.15em] text-[#183657] lg:text-[11px]">
                     {label}
                   </span>
-                </span>
-                <span className="text-[10px] leading-[1.4] text-[#49627d] sm:text-[11px] lg:text-xs xl:text-[13px]">
-                  {detail}
+                  <span className="mt-1 block text-xs leading-5 text-[#49627d]">
+                    {detail}
+                  </span>
                 </span>
               </li>
             ))}
-          </ul>
+          </ul> */}
         </div>
       </div>
     </section>

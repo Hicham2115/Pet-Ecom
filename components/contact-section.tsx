@@ -63,20 +63,20 @@ export function ContactSection() {
         </div>
 
         <form
-          className="flex flex-col p-6 sm:p-9 lg:min-h-[650px] lg:p-12 xl:p-14"
+          className="flex flex-col bg-white/70 p-6 sm:p-9 lg:min-h-[650px] lg:p-12 xl:p-14"
           id="contact-form"
         >
           <div className="grid gap-x-7 gap-y-6 sm:grid-cols-2 sm:gap-y-7 lg:flex-1 lg:grid-rows-[auto_auto_1fr]">
             <div>
               <label
-                className="font-serif text-sm font-bold uppercase tracking-[0.12em] text-[#10284b]"
+                className="text-xs font-bold uppercase tracking-[0.12em] text-[#365577]"
                 htmlFor="contact-first-name"
               >
                 Prénom
               </label>
               <input
                 autoComplete="given-name"
-                className="mt-2.5 min-h-10 w-full border-b border-[#c7d8eb] bg-transparent pb-2 text-sm text-[#10284b] outline-none placeholder:text-[#91a3ba] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#175ffc]"
+                className="mt-2.5 min-h-12 w-full rounded-xl border border-[#dce9f8] bg-[#f7faff] px-4 text-sm text-[#10284b] outline-none transition-[border-color,box-shadow,background-color] placeholder:text-[#91a3ba] hover:border-[#b8cfee] focus:border-[#175ffc] focus:bg-white focus:shadow-[0_0_0_4px_rgba(23,95,252,0.1)]"
                 id="contact-first-name"
                 name="firstName"
                 placeholder="Votre prénom"
@@ -85,14 +85,14 @@ export function ContactSection() {
             </div>
             <div>
               <label
-                className="font-serif text-sm font-bold uppercase tracking-[0.12em] text-[#10284b]"
+                className="text-xs font-bold uppercase tracking-[0.12em] text-[#365577]"
                 htmlFor="contact-last-name"
               >
                 Nom
               </label>
               <input
                 autoComplete="family-name"
-                className="mt-2.5 min-h-10 w-full border-b border-[#c7d8eb] bg-transparent pb-2 text-sm text-[#10284b] outline-none placeholder:text-[#91a3ba] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#175ffc]"
+                className="mt-2.5 min-h-12 w-full rounded-xl border border-[#dce9f8] bg-[#f7faff] px-4 text-sm text-[#10284b] outline-none transition-[border-color,box-shadow,background-color] placeholder:text-[#91a3ba] hover:border-[#b8cfee] focus:border-[#175ffc] focus:bg-white focus:shadow-[0_0_0_4px_rgba(23,95,252,0.1)]"
                 id="contact-last-name"
                 name="lastName"
                 placeholder="Votre nom"
@@ -101,14 +101,14 @@ export function ContactSection() {
             </div>
             <div className="sm:col-span-2">
               <label
-                className="font-serif text-sm font-bold uppercase tracking-[0.12em] text-[#10284b]"
+                className="text-xs font-bold uppercase tracking-[0.12em] text-[#365577]"
                 htmlFor="contact-email"
               >
                 E-mail
               </label>
               <input
                 autoComplete="email"
-                className="mt-2.5 min-h-10 w-full border-b border-[#c7d8eb] bg-transparent pb-2 text-sm text-[#10284b] outline-none placeholder:text-[#91a3ba] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#175ffc]"
+                className="mt-2.5 min-h-12 w-full rounded-xl border border-[#dce9f8] bg-[#f7faff] px-4 text-sm text-[#10284b] outline-none transition-[border-color,box-shadow,background-color] placeholder:text-[#91a3ba] hover:border-[#b8cfee] focus:border-[#175ffc] focus:bg-white focus:shadow-[0_0_0_4px_rgba(23,95,252,0.1)]"
                 id="contact-email"
                 name="email"
                 placeholder="vous@exemple.com"
@@ -118,13 +118,13 @@ export function ContactSection() {
             </div>
             <div className="sm:col-span-2 lg:flex lg:min-h-0 lg:flex-col">
               <label
-                className="font-serif text-sm font-bold uppercase tracking-[0.12em] text-[#10284b]"
+                className="text-xs font-bold uppercase tracking-[0.12em] text-[#365577]"
                 htmlFor="contact-message"
               >
                 Votre message
               </label>
               <textarea
-                className="mt-2.5 min-h-32 w-full resize-y border-b border-[#c7d8eb] bg-transparent py-2 text-sm leading-6 text-[#10284b] outline-none placeholder:text-[#91a3ba] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#175ffc] sm:min-h-40 lg:flex-1"
+                className="mt-2.5 min-h-36 w-full resize-y rounded-xl border border-[#dce9f8] bg-[#f7faff] p-4 text-sm leading-6 text-[#10284b] outline-none transition-[border-color,box-shadow,background-color] placeholder:text-[#91a3ba] hover:border-[#b8cfee] focus:border-[#175ffc] focus:bg-white focus:shadow-[0_0_0_4px_rgba(23,95,252,0.1)] sm:min-h-40 lg:flex-1"
                 id="contact-message"
                 name="message"
                 placeholder="Parlez-nous de votre question..."

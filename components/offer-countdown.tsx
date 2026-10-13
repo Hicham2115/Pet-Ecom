@@ -67,13 +67,13 @@ export function OfferCountdown() {
             Leur bonheur mérite{" "}
             <span className="text-[#91baff]">une belle surprise.</span>
           </h2>
-          <p className="mt-3 max-w-lg text-sm leading-6 text-blue-100/75 sm:text-base">
+          <p className="mt-3 max-w-lg text-sm leading-6 text-white sm:text-base">
             Profitez de notre sélection du moment avant la fin de l’offre.
             Faites plaisir à votre compagnon, simplement.
           </p>
           <Link
             className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#175ffc] px-6 text-sm font-bold text-white transition-[transform,background-color] duration-200 hover:-translate-y-0.5 hover:bg-[#3475ff] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
-            href="#best-sellers"
+            href="/products"
           >
             Voir les offres <ArrowRight aria-hidden="true" className="size-4" />
           </Link>
@@ -108,9 +108,6 @@ export function OfferCountdown() {
               </div>
             ))}
           </div>
-          <p className="mt-3 text-[11px] leading-5 text-blue-100/50">
-            Le compte à rebours est enregistré sur cet appareil.
-          </p>
         </div>
       </div>
     </section>

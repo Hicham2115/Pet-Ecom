@@ -2,8 +2,17 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { Select } from "@base-ui/react/select";
+import { useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import type { Product } from "@/lib/products";
 import {
   ArrowDownWideNarrow,
   ArrowRight,
@@ -18,64 +27,6 @@ import {
   Star,
 } from "lucide-react";
 
-const products = [
-  {
-    brand: "Meadowland",
-    name: "Croquettes chien adulte",
-    detail: "Poulet & riz complet · 12 kg",
-    price: 420,
-    unitPrice: "35 DH/kg",
-    reviews: 428,
-    image: "/products/dog-food.webp",
-    category: "Alimentation",
-    pet: "Chien",
-  },
-  {
-    brand: "PawWell",
-    name: "Bouchées fondantes",
-    detail: "Saumon · Friandises pour chat · 60 g",
-    price: 29,
-    unitPrice: "48 DH/100 g",
-    reviews: 316,
-    image: "/products/cat-treats.webp",
-    category: "Friandises",
-    pet: "Chat",
-  },
-  {
-    brand: "PureBowl",
-    name: "Croquettes pour chat",
-    detail: "Recette au poulet · 2 kg",
-    price: 160,
-    unitPrice: "80 DH/kg",
-    reviews: 207,
-    image: "/products/cat-food.webp",
-    category: "Alimentation",
-    pet: "Chat",
-  },
-  {
-    brand: "PlayPaws",
-    name: "Corde résistante",
-    detail: "Jouet à tirer · Pour chiens actifs",
-    price: 95,
-    unitPrice: "",
-    reviews: 184,
-    image: "/products/rope-toy.webp",
-    category: "Jouets",
-    pet: "Chien",
-  },
-  {
-    brand: "FreshPaws",
-    name: "Lingettes pour animaux",
-    detail: "Aloe vera & avoine · 100 pièces",
-    price: 55,
-    unitPrice: "0,55 DH/pièce",
-    reviews: 521,
-    image: "/products/pet-wipes.webp",
-    category: "Soins",
-    pet: "Chien & chat",
-  },
-];
-
 const categories = [
   "Tout",
   "Chiens",
@@ -86,7 +37,7 @@ const categories = [
 ];
 const categoryCounts = [5, 3, 2, 2, 1, 1];
 
-function ProductCard({ product }: { product: (typeof products)[number] }) {
+function ProductCard({ product }: { product: Product }) {
   return (
     <article className="group flex min-w-0 flex-col overflow-hidden rounded-[22px] border border-[#e4edf7] bg-white transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:border-[#c8dcf5] hover:shadow-[0_18px_38px_rgba(16,40,75,0.12)] focus-within:border-[#c8dcf5] focus-within:shadow-[0_18px_38px_rgba(16,40,75,0.12)] motion-reduce:transition-none">
       <div className="relative h-[210px] overflow-hidden bg-[#ffffff] sm:h-[230px]">
@@ -111,29 +62,33 @@ function ProductCard({ product }: { product: (typeof products)[number] }) {
       <div className="flex flex-1 flex-col px-4 pb-4 pt-4 sm:px-5">
         <p className="text-xs font-bold text-[#10284b]">{product.brand}</p>
         <h2 className="mt-1 text-[15px] font-semibold leading-5 text-[#294360]">
-          {product.name}
+          <Link className="transition-colors hover:text-blue-700" href={`/products/${product.slug}`}>
+            {product.name}
+          </Link>
         </h2>
         <p className="mt-0.5 text-xs leading-5 text-[#66809c]">
           {product.detail}
         </p>
-        <div
-          aria-label={`Note : 4,5 sur 5, ${product.reviews} avis`}
-          className="mt-3 flex items-center gap-1.5"
-          role="img"
-        >
-          <span className="flex text-amber-400">
-            {Array.from({ length: 5 }, (_, index) => (
-              <Star
-                aria-hidden="true"
-                className="size-3.5 fill-current"
-                key={index}
-              />
-            ))}
-          </span>
-          <span className="text-[11px] text-slate-500">
-            ({product.reviews})
-          </span>
-        </div>
+        {product.reviews !== undefined && (
+          <div
+            aria-label={`Note : 4,5 sur 5, ${product.reviews} avis`}
+            className="mt-3 flex items-center gap-1.5"
+            role="img"
+          >
+            <span className="flex text-amber-400">
+              {Array.from({ length: 5 }, (_, index) => (
+                <Star
+                  aria-hidden="true"
+                  className="size-3.5 fill-current"
+                  key={index}
+                />
+              ))}
+            </span>
+            <span className="text-[11px] text-slate-500">
+              ({product.reviews})
+            </span>
+          </div>
+        )}
         <div className="mt-3 flex items-baseline justify-between gap-2">
           <span className="text-xl font-extrabold tracking-tight text-[#10284b]">
             {product.price} DH
@@ -145,25 +100,48 @@ function ProductCard({ product }: { product: (typeof products)[number] }) {
           )}
         </div>
         <button
-          className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#175ffc] px-3 text-sm font-bold text-white transition-[transform,background-color] duration-300 hover:-translate-y-0.5 hover:bg-[#0f4fdb] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#175ffc]"
+          className="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#175ffc] px-3 text-sm font-bold text-white transition-[transform,background-color] duration-300 hover:-translate-y-0.5 hover:bg-[#0f4fdb] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#175ffc] disabled:cursor-not-allowed disabled:bg-[#a9bad0] disabled:hover:translate-y-0"
+          disabled={product.availableForSale === false}
           type="button"
         >
           <ShoppingCart aria-hidden="true" className="size-4" />
-          Ajouter au panier
+          {product.availableForSale === false ? "Indisponible" : "Ajouter au panier"}
         </button>
       </div>
     </article>
   );
 }
 
-export function ProductsPage() {
+export function ProductsPage({ products }: { products: Product[] }) {
   const [category, setCategory] = useState("Tout");
   const [sort, setSort] = useState("popular");
   const [query, setQuery] = useState("");
   const [maxPrice, setMaxPrice] = useState(500);
+  const shopifyQuery = useQuery({
+    queryKey: ["shopify-products"],
+    queryFn: async () => {
+      const response = await fetch("/api/products");
+      if (!response.ok) throw new Error("Shopify products are unavailable.");
+      return (await response.json()) as Product[];
+    },
+  });
+  const shopifyProducts = shopifyQuery.data ?? [];
+  const catalog = useMemo(() => {
+    const existingSlugs = new Set(products.map((product) => product.slug));
+    return [
+      ...products,
+      ...shopifyProducts.filter((product) => !existingSlugs.has(product.slug)),
+    ];
+  }, [products, shopifyProducts]);
+
+  useEffect(() => {
+    if (shopifyQuery.error) {
+      toast.error("Impossible de charger les nouveaux produits pour le moment.");
+    }
+  }, [shopifyQuery.error]);
 
   const visibleProducts = useMemo(() => {
-    const filtered = products.filter((product) => {
+    const filtered = catalog.filter((product) => {
       const matchesCategory =
         category === "Tout" ||
         (category === "Chiens" && product.pet.includes("Chien")) ||
@@ -182,7 +160,7 @@ export function ProductsPage() {
     if (sort === "price-desc")
       return filtered.sort((a, b) => b.price - a.price);
     return filtered;
-  }, [category, maxPrice, query, sort]);
+  }, [catalog, category, maxPrice, query, sort]);
 
   return (
     <main className="min-h-screen bg-[#f7faff]">
@@ -367,48 +345,16 @@ export function ProductsPage() {
                   <span className="whitespace-nowrap text-xs font-medium text-[#71849a]">
                     Trier par
                   </span>
-                  <Select.Root
-                    onValueChange={(value) => setSort(String(value))}
-                    value={sort}
-                  >
-                    <Select.Trigger className="inline-flex h-9 min-w-[150px] items-center justify-between gap-3 rounded-lg px-2 text-left text-xs font-semibold text-[#10284b] outline-none transition-colors hover:bg-[#f4f8fd] focus-visible:ring-2 focus-visible:ring-blue-200">
-                      <Select.Value />
-                      <Select.Icon className="text-[#71849a]">⌄</Select.Icon>
-                    </Select.Trigger>
-                    <Select.Portal>
-                      <Select.Positioner
-                        className="z-[120] outline-none"
-                        sideOffset={6}
-                      >
-                        <Select.Popup className="min-w-[190px] origin-[var(--transform-origin)] rounded-xl border border-[#dce8f5] bg-white p-1.5 text-[#10284b] shadow-[0_14px_38px_rgba(16,40,75,0.16)] transition-[transform,scale,opacity] data-[starting-style]:scale-95 data-[starting-style]:opacity-0 data-[ending-style]:scale-95 data-[ending-style]:opacity-0">
-                          <Select.List>
-                            <Select.Item
-                              className="flex min-h-9 cursor-pointer items-center rounded-lg px-3 text-xs outline-none data-[highlighted]:bg-[#eef5ff] data-[highlighted]:text-[#175ffc] data-[selected]:font-bold"
-                              value="popular"
-                            >
-                              <Select.ItemText>
-                                Les plus populaires
-                              </Select.ItemText>
-                            </Select.Item>
-                            <Select.Item
-                              className="flex min-h-9 cursor-pointer items-center rounded-lg px-3 text-xs outline-none data-[highlighted]:bg-[#eef5ff] data-[highlighted]:text-[#175ffc] data-[selected]:font-bold"
-                              value="price-asc"
-                            >
-                              <Select.ItemText>Prix croissant</Select.ItemText>
-                            </Select.Item>
-                            <Select.Item
-                              className="flex min-h-9 cursor-pointer items-center rounded-lg px-3 text-xs outline-none data-[highlighted]:bg-[#eef5ff] data-[highlighted]:text-[#175ffc] data-[selected]:font-bold"
-                              value="price-desc"
-                            >
-                              <Select.ItemText>
-                                Prix décroissant
-                              </Select.ItemText>
-                            </Select.Item>
-                          </Select.List>
-                        </Select.Popup>
-                      </Select.Positioner>
-                    </Select.Portal>
-                  </Select.Root>
+                  <Select onValueChange={(value) => setSort(String(value))} value={sort}>
+                    <SelectTrigger className="h-9 min-w-[150px] border-0 px-2 text-xs font-semibold text-[#10284b] shadow-none hover:bg-[#f4f8fd] focus-visible:border-0 focus-visible:ring-2 focus-visible:ring-blue-200">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent align="end" className="min-w-[190px] border-[#dce8f5] p-1.5 text-[#10284b] shadow-[0_14px_38px_rgba(16,40,75,0.16)]">
+                      <SelectItem className="min-h-9 rounded-lg text-xs focus:bg-[#eef5ff] focus:text-[#175ffc]" value="popular">Les plus populaires</SelectItem>
+                      <SelectItem className="min-h-9 rounded-lg text-xs focus:bg-[#eef5ff] focus:text-[#175ffc]" value="price-asc">Prix croissant</SelectItem>
+                      <SelectItem className="min-h-9 rounded-lg text-xs focus:bg-[#eef5ff] focus:text-[#175ffc]" value="price-desc">Prix décroissant</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
             </div>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ProductsPage } from "@/components/products-page";
+import { products } from "@/lib/products";
 
 export const metadata: Metadata = {
   title: "Boutique | PawWell",
@@ -8,5 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <ProductsPage />;
+  return <ProductsPage products={products} />;
 }
