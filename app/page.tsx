@@ -1,6 +1,8 @@
+import { Suspense } from "react";
 import { Hero } from "@/components/hero";
 import { CategorySection } from "@/components/category-section";
 import { BestSellersSection } from "@/components/best-sellers-section";
+import { BestSellersSkeleton } from "@/components/best-sellers-skeleton";
 import { RepeatDeliverySection } from "@/components/repeat-delivery-section";
 import { ReviewsSection } from "@/components/reviews-section";
 import { FaqSection } from "@/components/faq-section";
@@ -18,7 +20,9 @@ export default function Home() {
         <OfferCountdown />
       </ScrollReveal>
       <ScrollReveal>
-        <BestSellersSection />
+        <Suspense fallback={<BestSellersSkeleton />}>
+          <BestSellersSection />
+        </Suspense>
       </ScrollReveal>
       <ScrollReveal>
         <RepeatDeliverySection />

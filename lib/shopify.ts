@@ -40,9 +40,6 @@ const productFields = `
 `;
 
 async function queryShopify(query: string, variables?: Record<string, string>) {
-  "use cache";
-  cacheLife("minutes");
-
   const domainValue = process.env.SHOPIFY_STORE_DOMAIN;
   const token = process.env.SHOPIFY_STOREFRONT_PRIVATE_TOKEN;
   const version = process.env.SHOPIFY_STOREFRONT_API_VERSION;
@@ -111,12 +108,18 @@ function toProduct(product: ShopifyProduct): Product {
 }
 
 export async function getShopifyProducts(): Promise<Product[]> {
+  "use cache";
+  cacheLife("minutes");
+
   const query = `query PawWellProducts { products(first: 50) { nodes { ${productFields} } } }`;
   const data = await queryShopify(query);
   return data?.products?.nodes.map(toProduct) ?? [];
 }
 
 export async function getShopifyProductByHandle(handle: string) {
+  "use cache";
+  cacheLife("minutes");
+
   const query = `query PawWellProduct($handle: String!) { product(handle: $handle) { ${productFields} } }`;
   const data = await queryShopify(query, { handle });
   return data?.product ? toProduct(data.product) : undefined;

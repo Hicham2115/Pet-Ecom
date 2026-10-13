@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { ProductsPage } from "@/components/products-page";
+import { ProductsPageSkeleton } from "@/components/products-page-skeleton";
 import type { Product } from "@/lib/products";
 import { getShopifyProducts } from "@/lib/shopify";
 
@@ -9,7 +11,15 @@ export const metadata: Metadata = {
     "Découvrez la sélection PawWell : alimentation, jouets et soins pour chiens et chats.",
 };
 
-export default async function Page() {
+export default function Page() {
+  return (
+    <Suspense fallback={<ProductsPageSkeleton />}>
+      <ShopifyProductsPage />
+    </Suspense>
+  );
+}
+
+async function ShopifyProductsPage() {
   let shopifyProducts: Product[] = [];
   let shopifyLoadFailed = false;
 
