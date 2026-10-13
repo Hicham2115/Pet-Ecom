@@ -1,4 +1,5 @@
 import { cacheLife } from "next/cache";
+import axios from "axios";
 import type { Product } from "@/lib/products";
 
 type ShopifyProduct = {
@@ -45,30 +46,25 @@ async function queryShopify(query: string, variables?: Record<string, string>) {
   const version = process.env.SHOPIFY_STOREFRONT_API_VERSION;
 
   if (!domainValue || !token || !version) {
-    throw new Error("Shopify settings are missing from the server environment.");
+    throw new Error(
+      "Shopify settings are missing from the server environment.",
+    );
   }
 
   try {
     const domain = new URL(
       domainValue.includes("://") ? domainValue : `https://${domainValue}`,
     ).hostname;
-    const response = await fetch(
+    const { data: result } = await axios.post<ShopifyResponse>(
       `https://${domain}/api/${version}/graphql.json`,
+      { query, variables },
       {
-        method: "POST",
         headers: {
           "content-type": "application/json",
           "Shopify-Storefront-Private-Token": token,
         },
-        body: JSON.stringify({ query, variables }),
       },
     );
-
-    if (!response.ok) {
-      throw new Error(`Shopify Storefront API returned HTTP ${response.status}.`);
-    }
-
-    const result = (await response.json()) as ShopifyResponse;
     if (result.errors?.length) {
       throw new Error(result.errors.map(({ message }) => message).join("; "));
     }

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   ArrowRight,
   Dog,
@@ -112,7 +113,7 @@ export function FaqSection() {
               </p>
             </div>
 
-            <a
+            <Link
               className="relative mt-6 inline-flex min-h-11 w-fit items-center gap-3 rounded-full border border-white/30 bg-white/10 py-2 pl-5 pr-2 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               href="/products"
             >
@@ -120,7 +121,7 @@ export function FaqSection() {
               <span className="flex size-8 items-center justify-center rounded-full bg-white text-blue-700">
                 <ArrowRight aria-hidden="true" className="size-4" />
               </span>
-            </a>
+            </Link>
 
             <div className="relative mt-auto hidden items-center gap-2 border-t border-white/15 pt-5 text-xs font-medium text-blue-100 sm:flex">
               <Headset aria-hidden="true" className="size-4" />

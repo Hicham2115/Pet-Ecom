@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowRight, PawPrint, Sparkles } from "lucide-react";
+import { ArrowRight, PawPrint } from "lucide-react";
 
 const offerDuration = 14 * 24 * 60 * 60 * 1000;
 const offerKey = "pawwell-offer-ends-at";

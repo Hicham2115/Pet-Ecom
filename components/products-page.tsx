@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -81,9 +82,14 @@ function ProductCard({ product }: { product: Product }) {
         </Link>
       </div>
       <div className="flex flex-1 flex-col px-4 pb-4 pt-4 sm:px-5">
-        {product.brand && <p className="text-xs font-bold text-[#10284b]">{product.brand}</p>}
+        {product.brand && (
+          <p className="text-xs font-bold text-[#10284b]">{product.brand}</p>
+        )}
         <h2 className="mt-1 text-[15px] font-semibold leading-5 text-[#294360]">
-          <Link className="transition-colors hover:text-blue-700" href={`/products/${product.slug}`}>
+          <Link
+            className="transition-colors hover:text-blue-700"
+            href={`/products/${product.slug}`}
+          >
             {product.name}
           </Link>
         </h2>
@@ -128,7 +134,9 @@ function ProductCard({ product }: { product: Product }) {
           type="button"
         >
           <ShoppingCart aria-hidden="true" className="size-4" />
-          {product.availableForSale === false ? "Indisponible" : "Ajouter au panier"}
+          {product.availableForSale === false
+            ? "Indisponible"
+            : "Ajouter au panier"}
         </button>
       </div>
     </article>
@@ -164,12 +172,12 @@ export function ProductsPage({
   const [sort, setSort] = useState("popular");
   const [query, setQuery] = useState("");
   const [maxPrice, setMaxPrice] = useState(500);
+
   const shopifyQuery = useQuery({
     queryKey: ["shopify-products"],
     queryFn: async () => {
-      const response = await fetch("/api/products");
-      if (!response.ok) throw new Error("Shopify products are unavailable.");
-      return (await response.json()) as Product[];
+      const { data } = await axios.get<Product[]>("/api/products");
+      return data;
     },
     initialData: initialShopifyProducts,
     // Keep the timestamp deterministic during prerender; the client refreshes this data on mount.
@@ -181,7 +189,9 @@ export function ProductsPage({
 
   useEffect(() => {
     if (shopifyQuery.error) {
-      toast.error("Impossible de charger les nouveaux produits pour le moment.");
+      toast.error(
+        "Impossible de charger les nouveaux produits pour le moment.",
+      );
     }
   }, [shopifyQuery.error]);
 
@@ -301,7 +311,11 @@ export function ProductsPage({
                       {item}
                     </span>
                     <span className="text-xs text-[#91a3ba]">
-                      {catalog.filter((product) => matchesCategory(product, item)).length}
+                      {
+                        catalog.filter((product) =>
+                          matchesCategory(product, item),
+                        ).length
+                      }
                     </span>
                   </button>
                 ))}
@@ -385,14 +399,35 @@ export function ProductsPage({
                   <span className="whitespace-nowrap text-xs font-medium text-[#71849a]">
                     Trier par
                   </span>
-                  <Select onValueChange={(value) => setSort(String(value))} value={sort}>
+                  <Select
+                    onValueChange={(value) => setSort(String(value))}
+                    value={sort}
+                  >
                     <SelectTrigger className="h-9 min-w-[150px] border-0 px-2 text-xs font-semibold text-[#10284b] shadow-none hover:bg-[#f4f8fd] focus-visible:border-0 focus-visible:ring-2 focus-visible:ring-blue-200">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent align="end" className="min-w-[190px] border-[#dce8f5] p-1.5 text-[#10284b] shadow-[0_14px_38px_rgba(16,40,75,0.16)]">
-                      <SelectItem className="min-h-9 rounded-lg text-xs focus:bg-[#eef5ff] focus:text-[#175ffc]" value="popular">Les plus populaires</SelectItem>
-                      <SelectItem className="min-h-9 rounded-lg text-xs focus:bg-[#eef5ff] focus:text-[#175ffc]" value="price-asc">Prix croissant</SelectItem>
-                      <SelectItem className="min-h-9 rounded-lg text-xs focus:bg-[#eef5ff] focus:text-[#175ffc]" value="price-desc">Prix décroissant</SelectItem>
+                    <SelectContent
+                      align="end"
+                      className="min-w-[190px] border-[#dce8f5] p-1.5 text-[#10284b] shadow-[0_14px_38px_rgba(16,40,75,0.16)]"
+                    >
+                      <SelectItem
+                        className="min-h-9 rounded-lg text-xs focus:bg-[#eef5ff] focus:text-[#175ffc]"
+                        value="popular"
+                      >
+                        Les plus populaires
+                      </SelectItem>
+                      <SelectItem
+                        className="min-h-9 rounded-lg text-xs focus:bg-[#eef5ff] focus:text-[#175ffc]"
+                        value="price-asc"
+                      >
+                        Prix croissant
+                      </SelectItem>
+                      <SelectItem
+                        className="min-h-9 rounded-lg text-xs focus:bg-[#eef5ff] focus:text-[#175ffc]"
+                        value="price-desc"
+                      >
+                        Prix décroissant
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

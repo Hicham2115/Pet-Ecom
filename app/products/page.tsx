@@ -27,7 +27,10 @@ async function ShopifyProductsPage() {
     shopifyProducts = await getShopifyProducts();
   } catch (error) {
     shopifyLoadFailed = true;
-    console.error("Could not load Shopify products for the products page:", error);
+    console.error(
+      "Could not load Shopify products for the products page:",
+      error,
+    );
   }
 
   return (

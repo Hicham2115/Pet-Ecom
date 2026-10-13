@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import axios from "axios";
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -19,9 +20,10 @@ export function ShopifyProductPage({
   const productQuery = useQuery({
     queryKey: ["shopify-product", handle],
     queryFn: async () => {
-      const response = await fetch(`/api/products/${encodeURIComponent(handle)}`);
-      if (!response.ok) throw new Error("Shopify product is unavailable.");
-      return (await response.json()) as Product | null;
+      const { data } = await axios.get<Product | null>(
+        `/api/products/${encodeURIComponent(handle)}`,
+      );
+      return data;
     },
     initialData: initialProduct,
     initialDataUpdatedAt: 1,

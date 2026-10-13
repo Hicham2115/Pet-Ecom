@@ -1,15 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Heart, ShieldCheck, Truck } from "lucide-react";
-
-const benefits = [
-  { icon: Truck, label: "Livraison", detail: "Rapide, suivie et fiable" },
-  {
-    icon: ShieldCheck,
-    label: "Sélection",
-    detail: "Des marques choisies avec soin",
-  },
-];
+import { ArrowRight } from "lucide-react";
 
 export function Hero() {
   return (
@@ -79,26 +70,6 @@ export function Hero() {
             <span className="hidden lg:inline">Choisir par animal</span>
             <ArrowRight aria-hidden="true" className="ml-2 size-4" />
           </Link>
-          {/* <ul className="mt-7 hidden max-w-[600px] grid-cols-2 gap-3 lg:mt-8 lg:grid xl:mt-10 xl:gap-4">
-            {benefits.map(({ icon: Icon, label, detail }) => (
-              <li
-                className="group flex min-w-0 items-center gap-3 rounded-2xl border border-white/75 bg-white/55 px-4 py-3.5 shadow-[0_8px_24px_rgba(16,40,75,0.04)] backdrop-blur-sm transition-[background-color,border-color,transform,box-shadow] duration-300 hover:-translate-y-0.5 hover:border-white hover:bg-white/85 hover:shadow-[0_12px_28px_rgba(16,40,75,0.08)]"
-                key={label}
-              >
-                <span className="flex size-11 shrink-0 items-center justify-center rounded-[14px] bg-white text-blue-600 shadow-[0_3px_10px_rgba(16,40,75,0.07)] transition-colors group-hover:bg-[#175ffc] group-hover:text-white">
-                  <Icon aria-hidden="true" className="size-5" />
-                </span>
-                <span className="min-w-0">
-                  <span className="block text-[10px] font-bold uppercase tracking-[0.15em] text-[#183657] lg:text-[11px]">
-                    {label}
-                  </span>
-                  <span className="mt-1 block text-xs leading-5 text-[#49627d]">
-                    {detail}
-                  </span>
-                </span>
-              </li>
-            ))}
-          </ul> */}
         </div>
       </div>
     </section>
