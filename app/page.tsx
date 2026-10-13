@@ -12,9 +12,8 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-white">
       <Hero />
-      <ScrollReveal>
-        <CategorySection />
-      </ScrollReveal>
+      <CategorySection />
+
       <ScrollReveal>
         <OfferCountdown />
       </ScrollReveal>

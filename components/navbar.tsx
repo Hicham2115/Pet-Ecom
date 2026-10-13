@@ -24,8 +24,8 @@ const links = [
     label: "Par animal",
     href: "/products",
     items: [
-      ["Chiens", "/products/croquettes-chien-adulte"],
-      ["Chats", "/products/croquettes-chat-poulet"],
+      ["Chiens", "/products"],
+      ["Chats", "/products"],
       ["Tous les produits", "/products"],
     ],
   },
@@ -33,24 +33,24 @@ const links = [
     label: "Alimentation",
     href: "/products",
     items: [
-      ["Croquettes pour chien", "/products/croquettes-chien-adulte"],
-      ["Croquettes pour chat", "/products/croquettes-chat-poulet"],
-      ["Friandises pour chat", "/products/bouchees-fondantes-saumon-chat"],
+      ["Croquettes pour chien", "/products"],
+      ["Croquettes pour chat", "/products"],
+      ["Friandises pour chat", "/products"],
     ],
   },
   {
     label: "Jouets",
-    href: "/products/corde-resistante-chien",
+    href: "/products",
     items: [
-      ["Jouets pour chiens", "/products/corde-resistante-chien"],
+      ["Jouets pour chiens", "/products"],
       ["Tous les produits", "/products"],
     ],
   },
   {
     label: "Hygiène & soins",
-    href: "/products/lingettes-animaux-aloe-vera",
+    href: "/products",
     items: [
-      ["Lingettes pour animaux", "/products/lingettes-animaux-aloe-vera"],
+      ["Lingettes pour animaux", "/products"],
       ["Tous les soins", "/products"],
     ],
   },
@@ -59,7 +59,7 @@ const links = [
     href: "/products",
     items: [
       ["Bien-être quotidien", "/products"],
-      ["Hygiène & soins", "/products/lingettes-animaux-aloe-vera"],
+      ["Hygiène & soins", "/products"],
     ],
   },
   {
@@ -91,7 +91,7 @@ const links = [
     href: "/products",
     items: [
       ["Conseils alimentation", "/products"],
-      ["Conseils de soin", "/products/lingettes-animaux-aloe-vera"],
+      ["Conseils de soin", "/products"],
     ],
   },
 ];

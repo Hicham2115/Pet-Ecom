@@ -9,6 +9,7 @@ import {
   ChevronRight,
   Heart,
   Minus,
+  PawPrint,
   Plus,
   ShoppingCart,
   Star,
@@ -22,16 +23,8 @@ const galleryImages = [
   { label: "Les ingrédients", position: "center 88%" },
 ];
 
-const productTabs = [
-  "Description",
-  "Composition",
-  "Conseils d’utilisation",
-] as const;
-type ProductTab = (typeof productTabs)[number];
-
 export function SingleProductPage({ product }: { product: Product }) {
   const [activeImage, setActiveImage] = useState(0);
-  const [activeTab, setActiveTab] = useState<ProductTab>("Description");
   const [quantity, setQuantity] = useState(1);
 
   return (
@@ -48,26 +41,13 @@ export function SingleProductPage({ product }: { product: Product }) {
             aria-hidden="true"
             className="size-3.5 text-[#a7b8ca]"
           />
-          <Link
-            className="transition-colors hover:text-blue-700"
-            href="/products"
-          >
-            {product.pet}
-          </Link>
-          <ChevronRight
-            aria-hidden="true"
-            className="size-3.5 text-[#a7b8ca]"
-          />
-          <Link
-            className="transition-colors hover:text-blue-700"
-            href="/products"
-          >
-            {product.category}
-          </Link>
-          <ChevronRight
-            aria-hidden="true"
-            className="size-3.5 text-[#a7b8ca]"
-          />
+          {product.category && (
+            <>
+              <ChevronRight aria-hidden="true" className="size-3.5 text-[#a7b8ca]" />
+              <span>{product.category}</span>
+            </>
+          )}
+          <ChevronRight aria-hidden="true" className="size-3.5 text-[#a7b8ca]" />
           <span aria-current="page" className="text-[#294360]">
             {product.name}
           </span>
@@ -76,58 +56,70 @@ export function SingleProductPage({ product }: { product: Product }) {
         <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 xl:gap-16">
           <section aria-label="Photos du produit" className="min-w-0">
             <div className="relative aspect-square overflow-hidden rounded-[24px] bg-[#ffffff] sm:rounded-[30px]">
-              <Image
-                alt={`${product.brand} — ${product.name}, ${product.detail}`}
-                className={`object-contain p-5 transition-transform duration-300 sm:p-8 ${activeImage === 0 ? "" : "scale-[1.65]"}`}
-                fill
-                priority
-                sizes="(max-width: 1024px) 100vw, 55vw"
-                src={product.image}
-                style={{ objectPosition: galleryImages[activeImage].position }}
-              />
+              {product.image ? (
+                <Image
+                  alt={`${product.brand} — ${product.name}, ${product.detail}`}
+                  className={`object-contain p-5 transition-transform duration-300 sm:p-8 ${activeImage === 0 ? "" : "scale-[1.65]"}`}
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 55vw"
+                  src={product.image}
+                  style={{ objectPosition: galleryImages[activeImage].position }}
+                />
+              ) : (
+                <div className="flex h-full items-center justify-center text-[#b8cbe0]">
+                  <PawPrint aria-hidden="true" className="size-20" />
+                </div>
+              )}
             </div>
-            <div
-              aria-label="Choisir une vue du produit"
-              className="mt-3 grid grid-cols-4 gap-2.5 sm:mt-4 sm:gap-3"
-            >
-              {galleryImages.map((image, index) => (
-                <button
-                  aria-label={image.label}
-                  aria-pressed={activeImage === index}
-                  className={`relative aspect-square overflow-hidden rounded-xl border-2 bg-[#f4f8fc] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 sm:rounded-2xl ${activeImage === index ? "border-[#175ffc]" : "border-transparent hover:border-[#c9dcf2]"}`}
-                  key={image.label}
-                  onClick={() => setActiveImage(index)}
-                  type="button"
-                >
-                  <Image
-                    alt=""
-                    className={`object-contain p-1.5 ${index === 0 ? "" : "scale-[1.8]"}`}
-                    fill
-                    sizes="(max-width: 640px) 22vw, 130px"
-                    src={product.image}
-                    style={{ objectPosition: image.position }}
-                  />
-                </button>
-              ))}
-            </div>
+            {product.image && (
+              <div
+                aria-label="Choisir une vue du produit"
+                className="mt-3 grid grid-cols-4 gap-2.5 sm:mt-4 sm:gap-3"
+              >
+                {galleryImages.map((image, index) => (
+                  <button
+                    aria-label={image.label}
+                    aria-pressed={activeImage === index}
+                    className={`relative aspect-square overflow-hidden rounded-xl border-2 bg-[#f4f8fc] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 sm:rounded-2xl ${activeImage === index ? "border-[#175ffc]" : "border-transparent hover:border-[#c9dcf2]"}`}
+                    key={image.label}
+                    onClick={() => setActiveImage(index)}
+                    type="button"
+                  >
+                    <Image
+                      alt=""
+                      className={`object-contain p-1.5 ${index === 0 ? "" : "scale-[1.8]"}`}
+                      fill
+                      sizes="(max-width: 640px) 22vw, 130px"
+                      src={product.image}
+                      style={{ objectPosition: image.position }}
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </section>
 
           <section
             aria-labelledby="product-title"
             className="flex flex-col pt-1 sm:pt-3 lg:pt-2"
           >
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#71849a]">
-              {product.brand}
-            </p>
+            {product.brand && (
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#71849a]">
+                {product.brand}
+              </p>
+            )}
             <h1
               id="product-title"
               className="mt-2 text-[clamp(30px,4vw,46px)] font-extrabold leading-[1.04] tracking-[-0.045em] text-[#10284b]"
             >
               {product.name}
             </h1>
-            <p className="mt-2 text-lg text-[#5d7590] sm:text-xl">
-              {product.detail}
-            </p>
+            {product.detail && (
+              <p className="mt-2 text-lg text-[#5d7590] sm:text-xl">
+                {product.detail}
+              </p>
+            )}
 
             {product.reviews !== undefined && (
               <a
@@ -163,24 +155,21 @@ export function SingleProductPage({ product }: { product: Product }) {
               </p>
             )}
 
-            <p className="mt-5 max-w-xl text-[15px] leading-7 text-[#49627d]">
-              {product.description}
-            </p>
-
             <div className="mt-5 flex flex-wrap gap-2.5">
-              <span className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-[#dce8f5] bg-[#f7faff] px-3.5 text-xs font-semibold text-[#365577]">
-                <span className="flex size-6 items-center justify-center rounded-lg bg-white text-[#175ffc]">
-                  <Check aria-hidden="true" className="size-3.5" />
+              {product.pet && (
+                <span className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-[#dce8f5] bg-[#f7faff] px-3.5 text-xs font-semibold text-[#365577]">
+                  <span className="flex size-6 items-center justify-center rounded-lg bg-white text-[#175ffc]">
+                    <Check aria-hidden="true" className="size-3.5" />
+                  </span>
+                  {product.pet}
                 </span>
-                {product.pet}
-              </span>
-              <span className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-[#dce8f5] bg-[#f7faff] px-3.5 text-xs font-semibold text-[#365577]">
-                <span
-                  aria-hidden="true"
-                  className="size-2 rounded-full bg-[#175ffc]"
-                />
-                {product.category}
-              </span>
+              )}
+              {product.category && (
+                <span className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-[#dce8f5] bg-[#f7faff] px-3.5 text-xs font-semibold text-[#365577]">
+                  <span aria-hidden="true" className="size-2 rounded-full bg-[#175ffc]" />
+                  {product.category}
+                </span>
+              )}
             </div>
 
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
@@ -249,44 +238,17 @@ export function SingleProductPage({ product }: { product: Product }) {
           </section>
         </div>
 
-        <section
-          aria-label="Informations produit"
-          className="mt-10 border-t border-[#e2ebf5] pt-2 sm:mt-12"
-        >
-          <div
-            aria-label="Détails du produit"
-            className="flex gap-5 overflow-x-auto sm:gap-9"
-            role="tablist"
+        {product.description && (
+          <section
+            aria-label="Description du produit"
+            className="mt-10 border-t border-[#e2ebf5] pt-6 sm:mt-12"
           >
-            {productTabs.map((tab) => (
-              <button
-                aria-selected={activeTab === tab}
-                className={`min-h-12 shrink-0 border-b-2 px-1 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600 ${activeTab === tab ? "border-[#175ffc] text-[#175ffc]" : "border-transparent text-[#71849a] hover:text-[#294360]"}`}
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                role="tab"
-                type="button"
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
-          <div
-            aria-live="polite"
-            className="max-w-5xl py-5 text-sm leading-7 text-[#5d7590]"
-            role="tabpanel"
-          >
-            {
-              product[
-                activeTab === "Description"
-                  ? "description"
-                  : activeTab === "Composition"
-                    ? "composition"
-                    : "usage"
-              ]
-            }
-          </div>
-        </section>
+            <h2 className="text-lg font-bold text-[#10284b]">Description</h2>
+            <p className="max-w-5xl py-4 text-sm leading-7 text-[#5d7590]">
+              {product.description}
+            </p>
+          </section>
+        )}
         <span id="product-reviews" className="sr-only">
           Avis clients
         </span>

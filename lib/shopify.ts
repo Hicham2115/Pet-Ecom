@@ -8,6 +8,7 @@ type ShopifyProduct = {
   vendor: string;
   productType: string;
   description: string;
+  tags: string[];
   featuredImage: { url: string; altText: string | null } | null;
   priceRange: {
     minVariantPrice: { amount: string; currencyCode: string };
@@ -32,6 +33,7 @@ const productFields = `
   vendor
   productType
   description
+  tags
   featuredImage { url altText }
   priceRange { minVariantPrice { amount currencyCode } }
   variants(first: 1) { nodes { id availableForSale } }
@@ -82,19 +84,27 @@ async function queryShopify(query: string, variables?: Record<string, string>) {
 }
 
 function toProduct(product: ShopifyProduct): Product {
+  const tags = product.tags.map((tag) => tag.toLowerCase());
+  const pet = [
+    tags.some((tag) => tag.includes("chien")) && "Chien",
+    tags.some((tag) => tag.includes("chat")) && "Chat",
+  ]
+    .filter(Boolean)
+    .join(" & ");
+
   return {
     slug: product.handle,
-    brand: product.vendor || "PawWell",
+    brand: product.vendor,
     name: product.title,
-    detail: product.productType || "Nouveau produit",
+    detail: product.productType,
     price: Number(product.priceRange.minVariantPrice.amount),
     unitPrice: "",
-    image: product.featuredImage?.url || "/products/dog-food.webp",
-    category: product.productType || "Nouveautés",
-    pet: "Chien & chat",
-    description: product.description || "Découvrez ce produit PawWell.",
-    composition: "Consultez l’emballage pour les détails du produit.",
-    usage: "Suivez les indications figurant sur l’emballage.",
+    image: product.featuredImage?.url ?? "",
+    category: product.productType,
+    pet,
+    description: product.description,
+    composition: "",
+    usage: "",
     shopifyVariantId: product.variants.nodes[0]?.id,
     availableForSale: product.variants.nodes[0]?.availableForSale ?? false,
   };

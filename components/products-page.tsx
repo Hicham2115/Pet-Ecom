@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select,
   SelectContent,
@@ -35,15 +36,25 @@ const categories = [
   "Jouets",
   "Soins",
 ];
-const categoryCounts = [5, 3, 2, 2, 1, 1];
+
+function matchesCategory(product: Product, category: string) {
+  return (
+    category === "Tout" ||
+    (category === "Chiens" && product.pet.toLowerCase().includes("chien")) ||
+    (category === "Chats" && product.pet.toLowerCase().includes("chat")) ||
+    product.category === category
+  );
+}
 
 function ProductCard({ product }: { product: Product }) {
   return (
     <article className="group flex min-w-0 flex-col overflow-hidden rounded-[22px] border border-[#e4edf7] bg-white transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:border-[#c8dcf5] hover:shadow-[0_18px_38px_rgba(16,40,75,0.12)] focus-within:border-[#c8dcf5] focus-within:shadow-[0_18px_38px_rgba(16,40,75,0.12)] motion-reduce:transition-none">
       <div className="relative h-[210px] overflow-hidden bg-[#ffffff] sm:h-[230px]">
-        <span className="absolute left-3 top-3 z-10 rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-semibold text-[#365577] shadow-sm backdrop-blur">
-          {product.category}
-        </span>
+        {product.category && (
+          <span className="absolute left-3 top-3 z-10 rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-semibold text-[#365577] shadow-sm backdrop-blur">
+            {product.category}
+          </span>
+        )}
         <button
           aria-label={`Ajouter ${product.name} aux favoris`}
           className="absolute right-3 top-3 z-10 flex size-9 items-center justify-center rounded-full bg-white/90 text-[#365577] shadow-sm transition-colors hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
@@ -51,24 +62,36 @@ function ProductCard({ product }: { product: Product }) {
         >
           <Heart aria-hidden="true" className="size-[17px]" />
         </button>
-        <Image
-          alt={`${product.brand} — ${product.name}`}
-          className="object-contain p-4 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05] motion-reduce:transition-none"
-          fill
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          src={product.image}
-        />
+        <Link
+          aria-label={`Voir ${product.name}`}
+          className="absolute inset-0 flex items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-600"
+          href={`/products/${product.slug}`}
+        >
+          {product.image ? (
+            <Image
+              alt={`${product.brand} — ${product.name}`}
+              className="object-contain p-4 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05] motion-reduce:transition-none"
+              fill
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              src={product.image}
+            />
+          ) : (
+            <PawPrint aria-hidden="true" className="size-12 text-[#b8cbe0]" />
+          )}
+        </Link>
       </div>
       <div className="flex flex-1 flex-col px-4 pb-4 pt-4 sm:px-5">
-        <p className="text-xs font-bold text-[#10284b]">{product.brand}</p>
+        {product.brand && <p className="text-xs font-bold text-[#10284b]">{product.brand}</p>}
         <h2 className="mt-1 text-[15px] font-semibold leading-5 text-[#294360]">
           <Link className="transition-colors hover:text-blue-700" href={`/products/${product.slug}`}>
             {product.name}
           </Link>
         </h2>
-        <p className="mt-0.5 text-xs leading-5 text-[#66809c]">
-          {product.detail}
-        </p>
+        {product.detail && (
+          <p className="mt-0.5 text-xs leading-5 text-[#66809c]">
+            {product.detail}
+          </p>
+        )}
         {product.reviews !== undefined && (
           <div
             aria-label={`Note : 4,5 sur 5, ${product.reviews} avis`}
@@ -112,7 +135,31 @@ function ProductCard({ product }: { product: Product }) {
   );
 }
 
-export function ProductsPage({ products }: { products: Product[] }) {
+function ProductCardSkeleton() {
+  return (
+    <div
+      aria-hidden="true"
+      className="overflow-hidden rounded-[22px] border border-[#e4edf7] bg-white"
+    >
+      <Skeleton className="h-[210px] rounded-none bg-[#edf3fa] sm:h-[230px]" />
+      <div className="space-y-3 px-4 pb-4 pt-4 sm:px-5">
+        <Skeleton className="h-3 w-20 bg-[#e8eff7]" />
+        <Skeleton className="h-4 w-3/4 bg-[#e8eff7]" />
+        <Skeleton className="h-3 w-1/2 bg-[#e8eff7]" />
+        <Skeleton className="mt-5 h-6 w-24 bg-[#e8eff7]" />
+        <Skeleton className="mt-4 h-11 w-full rounded-xl bg-[#e8eff7]" />
+      </div>
+    </div>
+  );
+}
+
+export function ProductsPage({
+  initialShopifyProducts,
+  shopifyLoadFailed,
+}: {
+  initialShopifyProducts: Product[];
+  shopifyLoadFailed: boolean;
+}) {
   const [category, setCategory] = useState("Tout");
   const [sort, setSort] = useState("popular");
   const [query, setQuery] = useState("");
@@ -124,15 +171,13 @@ export function ProductsPage({ products }: { products: Product[] }) {
       if (!response.ok) throw new Error("Shopify products are unavailable.");
       return (await response.json()) as Product[];
     },
+    initialData: initialShopifyProducts,
+    // Keep the timestamp deterministic during prerender; the client refreshes this data on mount.
+    initialDataUpdatedAt: shopifyLoadFailed ? 0 : 1,
+    staleTime: 60_000,
   });
-  const shopifyProducts = shopifyQuery.data ?? [];
-  const catalog = useMemo(() => {
-    const existingSlugs = new Set(products.map((product) => product.slug));
-    return [
-      ...products,
-      ...shopifyProducts.filter((product) => !existingSlugs.has(product.slug)),
-    ];
-  }, [products, shopifyProducts]);
+  const shopifyProducts = shopifyQuery.data;
+  const catalog = useMemo(() => shopifyProducts ?? [], [shopifyProducts]);
 
   useEffect(() => {
     if (shopifyQuery.error) {
@@ -142,15 +187,10 @@ export function ProductsPage({ products }: { products: Product[] }) {
 
   const visibleProducts = useMemo(() => {
     const filtered = catalog.filter((product) => {
-      const matchesCategory =
-        category === "Tout" ||
-        (category === "Chiens" && product.pet.includes("Chien")) ||
-        (category === "Chats" && product.pet.toLowerCase().includes("chat")) ||
-        product.category === category;
       const searchable =
         `${product.brand} ${product.name} ${product.detail}`.toLowerCase();
       return (
-        matchesCategory &&
+        matchesCategory(product, category) &&
         product.price <= maxPrice &&
         searchable.includes(query.toLowerCase())
       );
@@ -231,7 +271,7 @@ export function ProductsPage({ products }: { products: Product[] }) {
                 Catégories
               </legend>
               <div className="space-y-1">
-                {categories.map((item, index) => (
+                {categories.map((item) => (
                   <button
                     aria-pressed={category === item}
                     className={`flex min-h-10 w-full items-center justify-between rounded-lg px-2.5 text-left text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 ${category === item ? "bg-[#eef5ff] font-semibold text-[#175ffc]" : "text-[#365577] hover:bg-[#f7faff] hover:text-[#10284b]"}`}
@@ -261,7 +301,7 @@ export function ProductsPage({ products }: { products: Product[] }) {
                       {item}
                     </span>
                     <span className="text-xs text-[#91a3ba]">
-                      {categoryCounts[index]}
+                      {catalog.filter((product) => matchesCategory(product, item)).length}
                     </span>
                   </button>
                 ))}
@@ -319,7 +359,7 @@ export function ProductsPage({ products }: { products: Product[] }) {
                 </h2>
                 <p className="mt-1 text-xs text-[#71849a]">
                   {visibleProducts.length} produit
-                  {visibleProducts.length > 1 ? "s" : ""} sur {products.length}
+                  {visibleProducts.length > 1 ? "s" : ""} sur {catalog.length}
                 </p>
               </div>
               <div className="flex flex-col gap-3 sm:flex-row">
@@ -361,11 +401,23 @@ export function ProductsPage({ products }: { products: Product[] }) {
 
             <div className="mb-5 mt-5 border-b border-[#e2ebf5]" />
 
-            {visibleProducts.length ? (
-              <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-3">
+            {visibleProducts.length || shopifyQuery.isPending ? (
+              <div
+                aria-busy={shopifyQuery.isPending}
+                className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-3"
+              >
+                {shopifyQuery.isPending && (
+                  <span className="sr-only" role="status">
+                    Chargement des produits Shopify
+                  </span>
+                )}
                 {visibleProducts.map((product) => (
                   <ProductCard key={product.brand} product={product} />
                 ))}
+                {shopifyQuery.isPending &&
+                  Array.from({ length: 3 }, (_, index) => (
+                    <ProductCardSkeleton key={`shopify-skeleton-${index}`} />
+                  ))}
               </div>
             ) : (
               <div className="rounded-3xl border border-dashed border-[#cfdeed] bg-white px-5 py-16 text-center">

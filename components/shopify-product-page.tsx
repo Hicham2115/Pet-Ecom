@@ -5,10 +5,17 @@ import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { NotFoundPage } from "@/components/not-found-page";
+import { ProductPageSkeleton } from "@/components/product-page-skeleton";
 import { SingleProductPage } from "@/components/single-product-page";
 import type { Product } from "@/lib/products";
 
-export function ShopifyProductPage({ handle }: { handle: string }) {
+export function ShopifyProductPage({
+  handle,
+  initialProduct,
+}: {
+  handle: string;
+  initialProduct?: Product;
+}) {
   const productQuery = useQuery({
     queryKey: ["shopify-product", handle],
     queryFn: async () => {
@@ -16,6 +23,9 @@ export function ShopifyProductPage({ handle }: { handle: string }) {
       if (!response.ok) throw new Error("Shopify product is unavailable.");
       return (await response.json()) as Product | null;
     },
+    initialData: initialProduct,
+    initialDataUpdatedAt: 1,
+    staleTime: 60_000,
   });
 
   useEffect(() => {
@@ -25,11 +35,7 @@ export function ShopifyProductPage({ handle }: { handle: string }) {
   }, [productQuery.error]);
 
   if (productQuery.isPending) {
-    return (
-      <main className="mx-auto min-h-[50vh] max-w-[1440px] px-5 py-20 text-center text-[#49627d]">
-        Chargement du produit…
-      </main>
-    );
+    return <ProductPageSkeleton />;
   }
 
   if (productQuery.error) {
