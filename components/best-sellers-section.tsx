@@ -63,7 +63,7 @@ export function BestSellersSection() {
           </h2>
           <Link
             className="mb-0.5 inline-flex shrink-0 items-center gap-1 text-xs font-bold text-blue-700 transition-colors hover:text-blue-900 sm:text-sm"
-            href="#best-sellers"
+            href="/products"
           >
             <span className="hidden sm:inline">Voir toutes les meilleures ventes</span>
             <span className="sm:hidden">Tout voir</span>
