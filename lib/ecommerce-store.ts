@@ -5,7 +5,7 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { toast } from "sonner";
 import type { Product } from "@/lib/products";
-import type { ShopifyCart } from "@/lib/shopify";
+import type { ShopifyCart } from "@/lib/shopify-cart";
 
 type CartResponse = { cart: ShopifyCart | null };
 type CartError = { error?: string };
@@ -15,13 +15,68 @@ type EcommerceState = {
   cart: ShopifyCart | null;
   wishlist: Product[];
   hasHydrated: boolean;
-  isCartPending: boolean;
+  pendingCartSlugs: string[];
+  isCartClearing: boolean;
   setHasHydrated: (hasHydrated: boolean) => void;
   refreshCart: () => Promise<void>;
   addToCart: (product: Product, quantity?: number) => Promise<void>;
   updateCartLine: (lineId: string, quantity: number) => Promise<void>;
+  clearCart: () => Promise<void>;
   toggleWishlist: (product: Product) => void;
 };
+
+let cartRequestQueue: Promise<void> = Promise.resolve();
+let cartSnapshotVersion = 0;
+
+function getCartWithLineQuantity(
+  cart: ShopifyCart,
+  lineId: string,
+  quantity: number,
+): ShopifyCart {
+  const line = cart.lines.nodes.find((item) => item.id === lineId);
+  if (!line) return cart;
+
+  const quantityChange = quantity - line.quantity;
+  const priceChange = Number(line.merchandise.price.amount) * quantityChange;
+  const nextLines =
+    quantity === 0
+      ? cart.lines.nodes.filter((item) => item.id !== lineId)
+      : cart.lines.nodes.map((item) =>
+          item.id === lineId ? { ...item, quantity } : item,
+        );
+
+  return {
+    ...cart,
+    totalQuantity: nextLines.reduce((total, item) => total + item.quantity, 0),
+    cost: {
+      subtotalAmount: {
+        ...cart.cost.subtotalAmount,
+        amount: String(
+          Math.max(0, Number(cart.cost.subtotalAmount.amount) + priceChange),
+        ),
+      },
+      totalAmount: {
+        ...cart.cost.totalAmount,
+        amount: String(
+          Math.max(0, Number(cart.cost.totalAmount.amount) + priceChange),
+        ),
+      },
+    },
+    lines: { nodes: nextLines },
+  };
+}
+
+function getEmptyCartSnapshot(cart: ShopifyCart): ShopifyCart {
+  return {
+    ...cart,
+    totalQuantity: 0,
+    cost: {
+      subtotalAmount: { ...cart.cost.subtotalAmount, amount: "0" },
+      totalAmount: { ...cart.cost.totalAmount, amount: "0" },
+    },
+    lines: { nodes: [] },
+  };
+}
 
 function getErrorMessage(error: unknown) {
   if (axios.isAxiosError<CartError>(error)) {
@@ -37,17 +92,19 @@ export const useEcommerceStore = create<EcommerceState>()(
       cart: null,
       wishlist: [],
       hasHydrated: false,
-      isCartPending: false,
+      pendingCartSlugs: [],
+      isCartClearing: false,
       setHasHydrated: (hasHydrated) => set({ hasHydrated }),
       refreshCart: async () => {
         const { cartId } = get();
         if (!cartId) return;
+        const version = cartSnapshotVersion;
 
         try {
           const { data } = await axios.get<CartResponse>("/api/cart", {
             params: { cartId },
           });
-          set({ cart: data.cart });
+          if (version === cartSnapshotVersion) set({ cart: data.cart });
           if (!data.cart) set({ cartId: null });
         } catch (error) {
           toast.error(getErrorMessage(error));
@@ -59,35 +116,88 @@ export const useEcommerceStore = create<EcommerceState>()(
           return;
         }
 
-        set({ isCartPending: true });
-        try {
-          const { data } = await axios.post<CartResponse>("/api/cart", {
-            cartId: get().cartId,
-            variantId: product.shopifyVariantId,
-            quantity,
-          });
-          set({ cart: data.cart, cartId: data.cart?.id ?? null });
-          toast.success("Produit ajouté au panier.");
-        } catch (error) {
-          toast.error(getErrorMessage(error));
-        } finally {
-          set({ isCartPending: false });
-        }
+        if (get().pendingCartSlugs.includes(product.slug)) return;
+        set((state) => ({
+          pendingCartSlugs: [...state.pendingCartSlugs, product.slug],
+        }));
+
+        const request = cartRequestQueue.then(async () => {
+          const version = cartSnapshotVersion;
+          try {
+            const { data } = await axios.post<CartResponse>("/api/cart", {
+              cartId: get().cartId,
+              variantId: product.shopifyVariantId,
+              quantity,
+            });
+            set({ cartId: data.cart?.id ?? null });
+            if (version === cartSnapshotVersion) set({ cart: data.cart });
+            toast.success("Produit ajouté au panier.");
+          } catch (error) {
+            toast.error(getErrorMessage(error));
+          } finally {
+            set((state) => ({
+              pendingCartSlugs: state.pendingCartSlugs.filter(
+                (slug) => slug !== product.slug,
+              ),
+            }));
+          }
+        });
+
+        cartRequestQueue = request.then(() => undefined);
+        await request;
       },
       updateCartLine: async (lineId, quantity) => {
-        const { cartId } = get();
-        if (!cartId) return;
+        const currentCart = get().cart;
+        if (!get().cartId || !currentCart) return;
 
-        try {
-          const { data } = await axios.patch<CartResponse>("/api/cart", {
-            cartId,
-            lineId,
-            quantity,
-          });
-          set({ cart: data.cart });
-        } catch (error) {
-          toast.error(getErrorMessage(error));
-        }
+        const previousCart = currentCart;
+        const nextCart = getCartWithLineQuantity(currentCart, lineId, quantity);
+        const version = ++cartSnapshotVersion;
+        set({ cart: nextCart });
+
+        const request = cartRequestQueue.then(async () => {
+          try {
+            const { data } = await axios.patch<CartResponse>("/api/cart", {
+              cartId: get().cartId,
+              lineId,
+              quantity,
+            });
+            if (version === cartSnapshotVersion) set({ cart: data.cart });
+          } catch (error) {
+            if (version === cartSnapshotVersion) set({ cart: previousCart });
+            toast.error(getErrorMessage(error));
+          }
+        });
+
+        cartRequestQueue = request.then(() => undefined);
+        await request;
+      },
+      clearCart: async () => {
+        const { cartId, cart: currentCart } = get();
+        if (!cartId || !currentCart || get().isCartClearing) return;
+
+        const previousCart = currentCart;
+        const version = ++cartSnapshotVersion;
+        set({ cart: getEmptyCartSnapshot(currentCart) });
+        set({ isCartClearing: true });
+        const request = cartRequestQueue.then(async () => {
+          try {
+            const { data } = await axios.delete<CartResponse>("/api/cart", {
+              data: { cartId: get().cartId },
+            });
+            set({ cartId: data.cart?.id ?? null });
+            if (version === cartSnapshotVersion) set({ cart: data.cart });
+            toast.success("Le panier a été vidé.");
+          } catch (error) {
+            if (version === cartSnapshotVersion) set({ cart: previousCart });
+            toast.error(getErrorMessage(error));
+          } finally {
+            set({ isCartClearing: false });
+          }
+        });
+
+        cartRequestQueue = request.then(() => undefined);
+        await request;
       },
       toggleWishlist: (product) => {
         const exists = get().wishlist.some((item) => item.slug === product.slug);

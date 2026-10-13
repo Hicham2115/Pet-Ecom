@@ -21,6 +21,8 @@ export function CartPage() {
   const cart = useEcommerceStore((state) => state.cart);
   const refreshCart = useEcommerceStore((state) => state.refreshCart);
   const updateCartLine = useEcommerceStore((state) => state.updateCartLine);
+  const clearCart = useEcommerceStore((state) => state.clearCart);
+  const isCartClearing = useEcommerceStore((state) => state.isCartClearing);
 
   useEffect(() => {
     if (hasHydrated && cartId) void refreshCart();
@@ -50,15 +52,28 @@ export function CartPage() {
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#175ffc]">Votre sélection</p>
             <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-[#10284b] sm:text-4xl">Votre panier</h1>
           </div>
-          <span className="text-sm font-medium text-[#71849a]">{cart?.totalQuantity ?? 0} article{cart?.totalQuantity === 1 ? "" : "s"}</span>
+          <div className="flex items-center gap-4">
+            <span className="text-sm font-medium text-[#71849a]">{cart?.totalQuantity ?? 0} article{cart?.totalQuantity === 1 ? "" : "s"}</span>
+            {lines.length > 0 && (
+              <button
+                className="inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-xl border border-[#f0d6d8] bg-white px-3 text-xs font-semibold text-[#a7444b] transition-colors hover:bg-[#fff6f6] disabled:cursor-not-allowed disabled:opacity-60 sm:px-4 sm:text-sm"
+                disabled={isCartClearing}
+                onClick={() => void clearCart()}
+                type="button"
+              >
+                <Trash2 aria-hidden="true" className="size-4" />
+                {isCartClearing ? "Suppression…" : "Vider le panier"}
+              </button>
+            )}
+          </div>
         </div>
 
         {lines.length === 0 ? (
-          <section className="mt-8 rounded-3xl border border-[#e2ebf5] bg-white px-6 py-14 text-center shadow-[0_8px_24px_rgba(16,40,75,0.04)]">
+          <section aria-live="polite" className="mt-8 rounded-3xl border border-[#e2ebf5] bg-white px-6 py-14 text-center shadow-[0_8px_24px_rgba(16,40,75,0.04)]" role="status">
             <span className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-[#eef5ff] text-[#175ffc]">
               <ShoppingBag aria-hidden="true" className="size-7" />
             </span>
-            <h2 className="mt-5 text-xl font-bold text-[#10284b]">Votre panier est vide</h2>
+            <h2 className="mt-5 text-xl font-bold text-[#10284b]">Aucun article dans votre panier</h2>
             <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#71849a]">Parcourez notre sélection et trouvez les essentiels pour votre compagnon.</p>
             <Link className="mt-6 inline-flex min-h-11 items-center justify-center rounded-xl bg-[#175ffc] px-5 text-sm font-bold text-white transition-colors hover:bg-[#0f4fdb]" href="/products">Découvrir les produits</Link>
           </section>

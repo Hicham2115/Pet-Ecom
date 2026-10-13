@@ -1,8 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, PawPrint, ShoppingCart } from "lucide-react";
+import { ArrowRight, PawPrint } from "lucide-react";
 import { getShopifyProducts } from "@/lib/shopify";
 import type { Product } from "@/lib/products";
+import {
+  FeaturedProductAddToCart,
+  FeaturedProductFavorite,
+} from "@/components/featured-product-actions";
 
 export async function BestSellersSection() {
   let products: Product[] = [];
@@ -37,14 +41,15 @@ export async function BestSellersSection() {
           <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 lg:gap-4">
             {products.map((product) => (
               <li
-                className="group flex min-w-0 flex-col overflow-hidden rounded-2xl border border-[#e5edf6] bg-white shadow-[0_2px_8px_rgba(16,40,75,0.04)] transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:border-[#c8dcf5] hover:shadow-[0_14px_32px_rgba(16,40,75,0.12)] focus-within:border-[#c8dcf5] focus-within:shadow-[0_14px_32px_rgba(16,40,75,0.12)] motion-reduce:transition-none"
+                className="group relative flex min-w-0 flex-col overflow-hidden rounded-2xl border border-[#e5edf6] bg-white shadow-[0_2px_8px_rgba(16,40,75,0.04)] transition-[box-shadow,border-color] duration-300 hover:border-[#c8dcf5] hover:shadow-[0_14px_32px_rgba(16,40,75,0.12)] focus-within:border-[#c8dcf5] focus-within:shadow-[0_14px_32px_rgba(16,40,75,0.12)]"
                 key={product.slug}
               >
-                <Link
-                  aria-label={`Voir ${product.name}`}
-                  className="relative flex h-36 items-center justify-center overflow-hidden bg-white sm:h-44"
-                  href={`/products/${product.slug}`}
-                >
+                <div className="relative h-36 overflow-hidden bg-white sm:h-44">
+                  <Link
+                    aria-label={`Voir ${product.name}`}
+                    className="absolute inset-0 flex items-center justify-center"
+                    href={`/products/${product.slug}`}
+                  >
                   {product.image ? (
                     <Image
                       alt={`${product.brand} — ${product.name}`}
@@ -56,7 +61,9 @@ export async function BestSellersSection() {
                   ) : (
                     <PawPrint aria-hidden="true" className="size-10 text-[#b8cbe0]" />
                   )}
-                </Link>
+                  </Link>
+                  <FeaturedProductFavorite product={product} />
+                </div>
                 <div className="flex flex-1 flex-col px-3 pb-16 pt-2.5 sm:px-3.5">
                   {product.brand && <p className="text-xs font-bold text-[#10284b] sm:text-sm">{product.brand}</p>}
                   <p className="mt-0.5 text-xs leading-4 text-[#365577] sm:text-sm sm:leading-5">
@@ -70,13 +77,7 @@ export async function BestSellersSection() {
                     )}
                   </div>
                 </div>
-                <Link
-                    className="absolute inset-x-3 bottom-3 inline-flex min-h-10 translate-y-[calc(100%+0.75rem)] items-center justify-center gap-2 rounded-xl bg-blue-600 px-2 text-xs font-bold text-white opacity-0 transition-[transform,opacity,background-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100 max-sm:translate-y-0 max-sm:opacity-100 motion-reduce:translate-y-0 motion-reduce:opacity-100 sm:text-sm"
-                    href={`/products/${product.slug}`}
-                  >
-                    <ShoppingCart aria-hidden="true" className="size-4" />
-                    Voir le produit
-                </Link>
+                <FeaturedProductAddToCart product={product} />
               </li>
             ))}
           </ul>

@@ -1,8 +1,9 @@
 import {
   addShopifyCartLine,
+  clearShopifyCart,
   getShopifyCart,
   updateShopifyCartLine,
-} from "@/lib/shopify";
+} from "@/lib/shopify-cart";
 
 const cartIdPattern = /^gid:\/\/shopify\/Cart\//;
 const variantIdPattern = /^gid:\/\/shopify\/ProductVariant\//;
@@ -17,10 +18,8 @@ function isValidQuantity(value: unknown, allowZero = false): value is number {
   );
 }
 
-function errorMessage(error: unknown) {
-  return error instanceof Error
-    ? error.message
-    : "Impossible de mettre à jour le panier.";
+function reportCartError(error: unknown) {
+  console.error("Shopify cart request failed:", error);
 }
 
 export async function GET(request: Request) {
@@ -32,7 +31,11 @@ export async function GET(request: Request) {
   try {
     return Response.json({ cart: await getShopifyCart(cartId) });
   } catch (error) {
-    return Response.json({ error: errorMessage(error) }, { status: 502 });
+    reportCartError(error);
+    return Response.json(
+      { error: "Impossible de charger le panier. Réessayez." },
+      { status: 502 },
+    );
   }
 }
 
@@ -45,7 +48,7 @@ export async function POST(request: Request) {
   }
 
   if (
-    (body.cartId !== undefined &&
+    (body.cartId != null &&
       (typeof body.cartId !== "string" || !cartIdPattern.test(body.cartId))) ||
     typeof body.variantId !== "string" ||
     !variantIdPattern.test(body.variantId) ||
@@ -56,13 +59,17 @@ export async function POST(request: Request) {
 
   try {
     const cart = await addShopifyCartLine(
-      body.cartId as string | undefined,
+      typeof body.cartId === "string" ? body.cartId : undefined,
       body.variantId,
       body.quantity,
     );
     return Response.json({ cart });
   } catch (error) {
-    return Response.json({ error: errorMessage(error) }, { status: 502 });
+    reportCartError(error);
+    return Response.json(
+      { error: "Impossible d’ajouter ce produit au panier. Réessayez." },
+      { status: 502 },
+    );
   }
 }
 
@@ -92,6 +99,33 @@ export async function PATCH(request: Request) {
     );
     return Response.json({ cart });
   } catch (error) {
-    return Response.json({ error: errorMessage(error) }, { status: 502 });
+    reportCartError(error);
+    return Response.json(
+      { error: "Impossible de mettre à jour le panier. Réessayez." },
+      { status: 502 },
+    );
+  }
+}
+
+export async function DELETE(request: Request) {
+  let body: { cartId?: unknown };
+  try {
+    body = await request.json();
+  } catch {
+    return Response.json({ error: "Requête invalide." }, { status: 400 });
+  }
+
+  if (typeof body.cartId !== "string" || !cartIdPattern.test(body.cartId)) {
+    return Response.json({ error: "Identifiant de panier invalide." }, { status: 400 });
+  }
+
+  try {
+    return Response.json({ cart: await clearShopifyCart(body.cartId) });
+  } catch (error) {
+    reportCartError(error);
+    return Response.json(
+      { error: "Impossible de vider le panier. Réessayez." },
+      { status: 502 },
+    );
   }
 }

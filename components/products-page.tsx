@@ -54,10 +54,12 @@ function ProductCard({ product }: { product: Product }) {
   );
   const toggleWishlist = useEcommerceStore((state) => state.toggleWishlist);
   const addToCart = useEcommerceStore((state) => state.addToCart);
-  const isCartPending = useEcommerceStore((state) => state.isCartPending);
+  const isCartPending = useEcommerceStore((state) =>
+    state.pendingCartSlugs.includes(product.slug),
+  );
 
   return (
-    <article className="group flex min-w-0 flex-col overflow-hidden rounded-[22px] border border-[#e4edf7] bg-white transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:border-[#c8dcf5] hover:shadow-[0_18px_38px_rgba(16,40,75,0.12)] focus-within:border-[#c8dcf5] focus-within:shadow-[0_18px_38px_rgba(16,40,75,0.12)] motion-reduce:transition-none">
+    <article className="group flex min-w-0 flex-col overflow-hidden rounded-[22px] border border-[#e4edf7] bg-white transition-[box-shadow,border-color] duration-300 hover:border-[#c8dcf5] hover:shadow-[0_18px_38px_rgba(16,40,75,0.12)] focus-within:border-[#c8dcf5] focus-within:shadow-[0_18px_38px_rgba(16,40,75,0.12)]">
       <div className="relative h-[210px] overflow-hidden bg-[#ffffff] sm:h-[230px]">
         {product.category && (
           <span className="absolute left-3 top-3 z-10 rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-semibold text-[#365577] shadow-sm backdrop-blur">

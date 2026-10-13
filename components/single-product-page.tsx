@@ -32,7 +32,9 @@ export function SingleProductPage({ product }: { product: Product }) {
   );
   const toggleWishlist = useEcommerceStore((state) => state.toggleWishlist);
   const addToCart = useEcommerceStore((state) => state.addToCart);
-  const isCartPending = useEcommerceStore((state) => state.isCartPending);
+  const isCartPending = useEcommerceStore((state) =>
+    state.pendingCartSlugs.includes(product.slug),
+  );
 
   return (
     <main className="min-h-screen bg-white text-[#10284b]">
