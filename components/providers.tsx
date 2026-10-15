@@ -1,12 +1,15 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useReducedMotion } from "motion/react";
+import { ReactLenis } from "lenis/react";
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { useEcommerceStore } from "@/lib/ecommerce-store";
 
 export function Providers({ children }: { children: ReactNode }) {
+  const prefersReducedMotion = useReducedMotion();
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -30,7 +33,13 @@ export function Providers({ children }: { children: ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {children}
+      {prefersReducedMotion ? (
+        children
+      ) : (
+        <ReactLenis root options={{ lerp: 0.1, anchors: true }}>
+          {children}
+        </ReactLenis>
+      )}
       <Toaster
         position="bottom-right"
         offset={24}

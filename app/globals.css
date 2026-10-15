@@ -1,11 +1,12 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import "lenis/dist/lenis.css";
 
 @custom-variant dark (&:is(.dark *));
 
 * {
-  scrollbar-color: #a8c4e4 #f3f8fd;
+  scrollbar-color: #2563eb #f3f8fd;
   scrollbar-width: thin;
 }
 
@@ -21,11 +22,11 @@
 *::-webkit-scrollbar-thumb {
   border: 2px solid #f3f8fd;
   border-radius: 999px;
-  background: #a8c4e4;
+  background: #2563eb;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: #2563eb;
+  background: #1d4ed8;
 }
 
 @theme inline {

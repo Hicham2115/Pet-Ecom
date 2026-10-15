@@ -14,7 +14,6 @@ import {
   Plus,
   ShoppingCart,
   Star,
-  Truck,
 } from "lucide-react";
 
 const galleryImages = [
@@ -52,11 +51,17 @@ export function SingleProductPage({ product }: { product: Product }) {
           />
           {product.category && (
             <>
-              <ChevronRight aria-hidden="true" className="size-3.5 text-[#a7b8ca]" />
+              <ChevronRight
+                aria-hidden="true"
+                className="size-3.5 text-[#a7b8ca]"
+              />
               <span>{product.category}</span>
             </>
           )}
-          <ChevronRight aria-hidden="true" className="size-3.5 text-[#a7b8ca]" />
+          <ChevronRight
+            aria-hidden="true"
+            className="size-3.5 text-[#a7b8ca]"
+          />
           <span aria-current="page" className="text-[#294360]">
             {product.name}
           </span>
@@ -73,7 +78,9 @@ export function SingleProductPage({ product }: { product: Product }) {
                   priority
                   sizes="(max-width: 1024px) 100vw, 55vw"
                   src={product.image}
-                  style={{ objectPosition: galleryImages[activeImage].position }}
+                  style={{
+                    objectPosition: galleryImages[activeImage].position,
+                  }}
                 />
               ) : (
                 <div className="flex h-full items-center justify-center text-[#b8cbe0]">
@@ -158,6 +165,12 @@ export function SingleProductPage({ product }: { product: Product }) {
               )}
             </div>
 
+            {product.description && (
+              <p className="mt-4 max-w-2xl text-sm leading-6 text-[#5d7590] sm:text-base sm:leading-7">
+                {product.description}
+              </p>
+            )}
+
             {product.availableForSale === false && (
               <p className="mt-3 text-sm font-semibold text-[#9b3e45]">
                 Actuellement indisponible
@@ -175,7 +188,10 @@ export function SingleProductPage({ product }: { product: Product }) {
               )}
               {product.category && (
                 <span className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-[#dce8f5] bg-[#f7faff] px-3.5 text-xs font-semibold text-[#365577]">
-                  <span aria-hidden="true" className="size-2 rounded-full bg-[#175ffc]" />
+                  <span
+                    aria-hidden="true"
+                    className="size-2 rounded-full bg-[#175ffc]"
+                  />
                   {product.category}
                 </span>
               )}
@@ -212,12 +228,20 @@ export function SingleProductPage({ product }: { product: Product }) {
               </div>
               <button
                 className="inline-flex min-h-12 flex-1 items-center justify-center gap-2.5 rounded-xl bg-[#175ffc] px-5 text-sm font-bold text-white transition-[transform,background-color] duration-300 hover:cursor-pointer hover:bg-[#0f4fdb] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#175ffc] disabled:cursor-not-allowed disabled:bg-[#a9bad0] disabled:hover:bg-[#a9bad0]"
-                disabled={product.availableForSale === false || !product.shopifyVariantId || isCartPending}
+                disabled={
+                  product.availableForSale === false ||
+                  !product.shopifyVariantId ||
+                  isCartPending
+                }
                 onClick={() => void addToCart(product, quantity)}
                 type="button"
               >
                 <ShoppingCart aria-hidden="true" className="size-[18px]" />
-                {product.availableForSale === false ? "Indisponible" : isCartPending ? "Ajout…" : "Ajouter au panier"}
+                {product.availableForSale === false
+                  ? "Indisponible"
+                  : isCartPending
+                    ? "Ajout…"
+                    : "Ajouter au panier"}
               </button>
             </div>
             <button
@@ -226,41 +250,16 @@ export function SingleProductPage({ product }: { product: Product }) {
               onClick={() => toggleWishlist(product)}
               type="button"
             >
-              <Heart aria-hidden="true" className={`size-[18px] ${isWishlisted ? "fill-current" : ""}`} />
+              <Heart
+                aria-hidden="true"
+                className={`size-[18px] ${isWishlisted ? "fill-current" : ""}`}
+              />
               {isWishlisted ? "Retirer des favoris" : "Ajouter aux favoris"}
             </button>
 
-            <div className="mt-5 flex items-center gap-4 rounded-2xl border border-[#e0ebf7] bg-[#f3f8fd] px-4 py-4 sm:px-5">
-              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-white text-[#175ffc]">
-                <Truck aria-hidden="true" className="size-6" />
-              </span>
-              <span className="min-w-0">
-                <span className="block text-sm font-bold text-[#10284b]">
-                  Livraison suivie
-                </span>
-                <span className="mt-0.5 block text-xs leading-5 text-[#71849a]">
-                  Livraison estimée sous 2 à 4 jours ouvrés.
-                </span>
-              </span>
-              <ChevronRight
-                aria-hidden="true"
-                className="ml-auto size-4 shrink-0 text-[#91a3ba]"
-              />
-            </div>
           </section>
         </div>
 
-        {product.description && (
-          <section
-            aria-label="Description du produit"
-            className="mt-10 border-t border-[#e2ebf5] pt-6 sm:mt-12"
-          >
-            <h2 className="text-lg font-bold text-[#10284b]">Description</h2>
-            <p className="max-w-5xl py-4 text-sm leading-7 text-[#5d7590]">
-              {product.description}
-            </p>
-          </section>
-        )}
         <span id="product-reviews" className="sr-only">
           Avis clients
         </span>
